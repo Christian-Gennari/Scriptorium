@@ -1,0 +1,24 @@
+{
+  "name": "calmlywriterclone",
+  "version": "1.0.0",
+  "description": "Just a clone of a writing program I like, but since it is closed source I am replicating it and selfhosting it, so that I may access my writing studio environment with VPN from anywhere.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christian-Gennari/CalmlyWriterClone.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Christian-Gennari/CalmlyWriterClone/issues"
+  },
+  "homepage": "https://github.com/Christian-Gennari/CalmlyWriterClone#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
