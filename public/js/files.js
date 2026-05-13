@@ -36,7 +36,7 @@ export async function newDocument() {
   state.isDirty = false;
   updateStats();
   setSaveStatus('', '');
-  localStorage.removeItem('calmly-current');
+  localStorage.removeItem('scriptorium-draft');
 }
 
 export async function openFile(name) {
@@ -59,7 +59,7 @@ export async function openFile(name) {
   updateStats();
   setSaveStatus('Saved', 'saved');
   closeModal();
-  localStorage.setItem('calmly-current', JSON.stringify({ name, content: file.content }));
+  localStorage.setItem('scriptorium-draft', JSON.stringify({ name, content: file.content }));
 }
 
 export async function saveCurrentFile() {
@@ -88,7 +88,7 @@ export async function saveCurrentFile() {
     }
     state.isDirty = false;
     setSaveStatus('Saved', 'saved');
-    localStorage.setItem('calmly-current', JSON.stringify({ name: state.currentFile, content: md }));
+    localStorage.setItem('scriptorium-draft', JSON.stringify({ name: state.currentFile, content: md }));
     return true;
   } catch {
     setSaveStatus('Error saving', 'error');
@@ -117,7 +117,7 @@ export async function saveAsFile() {
     document.title = `${fname} \u2014 Scriptorium`;
     state.isDirty = false;
     setSaveStatus('Saved', 'saved');
-    localStorage.setItem('calmly-current', JSON.stringify({ name: fname, content: md }));
+    localStorage.setItem('scriptorium-draft', JSON.stringify({ name: fname, content: md }));
     updateStats();
   } catch {
     showToast('Connection lost. Could not save file.', 'error');
@@ -187,7 +187,7 @@ export async function confirmAndDeleteFile(name) {
       state.isDirty = false;
       setSaveStatus('', '');
       updateStats();
-      localStorage.removeItem('calmly-current');
+      localStorage.removeItem('scriptorium-draft');
     }
     populateFileList();
   } catch {

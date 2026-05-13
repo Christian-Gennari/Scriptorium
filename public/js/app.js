@@ -63,7 +63,12 @@ async function init() {
   applySettings(state.settings);
 
   let initialContent = '';
-  const saved = localStorage.getItem('calmly-current');
+  const oldDraft = localStorage.getItem('calmly-current');
+  if (oldDraft) {
+    localStorage.setItem('scriptorium-draft', oldDraft);
+    localStorage.removeItem('calmly-current');
+  }
+  const saved = localStorage.getItem('scriptorium-draft');
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
