@@ -128,6 +128,11 @@ body {
   opacity: 0.5;
 }
 
+.drag-over {
+  outline: 2px dashed var(--text-secondary);
+  outline-offset: -4px;
+}
+
 #statusbar {
   height: var(--statusbar-height);
   display: flex;
@@ -620,6 +625,11 @@ input[type="checkbox"] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.current-file {
+  font-weight: 600;
+  color: var(--text);
 }
 
 .file-item-right {

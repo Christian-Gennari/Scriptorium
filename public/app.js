@@ -356,6 +356,7 @@ async function populateFileList() {
       const nameSpan = document.createElement('span');
       nameSpan.className = 'file-item-name';
       nameSpan.textContent = f.name;
+      if (f.name === currentFile) nameSpan.classList.add('current-file');
       nameSpan.addEventListener('click', () => openFile(f.name));
       const rightSpan = document.createElement('span');
       rightSpan.className = 'file-item-right';
@@ -579,6 +580,36 @@ document.querySelectorAll('.btn-close-modal, #open-modal .modal-backdrop').forEa
 document.getElementById('btn-shortcuts').addEventListener('click', openShortcuts);
 document.getElementById('btn-close-shortcuts').addEventListener('click', closeShortcuts);
 document.getElementById('shortcuts-backdrop').addEventListener('click', closeShortcuts);
+
+// Drag-and-drop file import
+const editorContainer = document.getElementById('editor-container');
+editorContainer.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  editorContainer.classList.add('drag-over');
+});
+editorContainer.addEventListener('dragleave', () => {
+  editorContainer.classList.remove('drag-over');
+});
+editorContainer.addEventListener('drop', async (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  editorContainer.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  if (!file.name.match(/\.(md|txt|html|htm)$/i)) {
+    showToast('Unsupported file type. Use .md, .txt, .html, or .htm', 'error');
+    return;
+  }
+  const content = await file.text();
+  editor.value = content;
+  currentFile = sanitizeName(file.name);
+  fileNameEl.textContent = currentFile;
+  document.title = `${currentFile} — Calmly Writer`;
+  isDirty = true;
+  updateStats();
+  setSaveStatus('Unsaved', 'unsaved');
+});
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
