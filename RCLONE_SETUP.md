@@ -46,7 +46,7 @@ Test: `rclone ls Mega:`
 
 ```bash
 # One-way sync — adds/updates files remotely, never deletes anything
-rclone copy /home/dev/coding/projects/CalmlyWriterClone/data/documents Mega:CalmlyBackup
+rclone copy ./data/documents Mega:CalmlyBackup
 ```
 
 ### Automate with Cron
@@ -54,7 +54,7 @@ rclone copy /home/dev/coding/projects/CalmlyWriterClone/data/documents Mega:Calm
 ```bash
 crontab -e
 # Add this line to run every 4 hours:
-0 */4 * * * rclone copy /home/dev/coding/projects/CalmlyWriterClone/data/documents Mega:CalmlyBackup
+0 */4 * * * rclone copy /path/to/orison-writer/data/documents Mega:CalmlyBackup
 ```
 
 ## Monthly Cleanup (Delete Remotely-Deleted Files)
@@ -63,10 +63,10 @@ When you delete a document locally, `rclone copy` leaves it on MEGA forever. Run
 
 ```bash
 # Dry run — see what would be deleted without actually deleting
-rclone sync --dry-run /home/dev/coding/projects/CalmlyWriterClone/data/documents Mega:CalmlyBackup
+rclone sync --dry-run ./data/documents Mega:CalmlyBackup
 
 # If the list looks right, run for real with archive backup:
-rclone sync --backup-dir Mega:Archive/$(date +%Y-%m) /home/dev/coding/projects/CalmlyWriterClone/data/documents Mega:CalmlyBackup
+rclone sync --backup-dir Mega:Archive/$(date +%Y-%m) ./data/documents Mega:CalmlyBackup
 ```
 
 This moves deleted files to `Archive/2026-05/` on MEGA instead of deleting them permanently. You can manually purge old archives after 30–90 days.
@@ -78,10 +78,10 @@ This moves deleted files to `Archive/2026-05/` on MEGA instead of deleting them 
 rclone ls Mega:CalmlyBackup
 
 # Restore a single file
-rclone copy Mega:CalmlyBackup/Whyareyou.md /home/dev/coding/projects/CalmlyWriterClone/data/documents/
+rclone copy Mega:CalmlyBackup/Whyareyou.md ./data/documents/
 
 # Restore everything
-rclone copy Mega:CalmlyBackup /home/dev/coding/projects/CalmlyWriterClone/data/documents/
+rclone copy Mega:CalmlyBackup ./data/documents/
 
 # Find a deleted file in an archive
 rclone ls Mega:Archive/2026-04/
@@ -97,11 +97,11 @@ If running via Docker, the documents are in a named volume. Back up from the **h
 # docker-compose.yml
 services:
   app:
-    image: calmlywriter
+    image: orison-writer
     volumes:
       - ./data:/app/data   # ← bind mount, easy to rclone from host
 
-Then point rclone at `./data/documents` on the host.
+Then point rclone at `./data/documents` on the host (or wherever you cloned the project).
 
 ## Quick Reference
 

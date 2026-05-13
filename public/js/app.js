@@ -71,7 +71,7 @@ async function init() {
         state.currentFile = parsed.name;
         fileNameEl.textContent = parsed.name;
         setSaveStatus('Saved', 'saved');
-        document.title = `${parsed.name} \u2014 Calmly Writer`;
+        document.title = `${parsed.name} \u2014 Orison Writer`;
       }
     } catch {}
   }

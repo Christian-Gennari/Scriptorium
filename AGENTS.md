@@ -1,4 +1,4 @@
-# AGENTS.md — CalmlyWriterClone
+# AGENTS.md — Orison Writer
 
 ## Commands
 

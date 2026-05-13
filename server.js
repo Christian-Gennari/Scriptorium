@@ -170,5 +170,5 @@ app.put('/api/settings', (req, res) => {
 ensureDataDir();
 
 app.listen(PORT, () => {
-  console.log(`CalmlyWriterClone running at http://localhost:${PORT}`);
+  console.log(`Orison Writer running at http://localhost:${PORT}`);
 });

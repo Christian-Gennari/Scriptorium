@@ -32,7 +32,7 @@ export async function newDocument() {
   clearContent();
   state.currentFile = null;
   fileNameEl.textContent = 'Untitled';
-  document.title = 'Untitled \u2014 Calmly Writer';
+  document.title = 'Untitled \u2014 Orison Writer';
   state.isDirty = false;
   updateStats();
   setSaveStatus('', '');
@@ -53,7 +53,7 @@ export async function openFile(name) {
   }
   state.currentFile = name;
   fileNameEl.textContent = name;
-  document.title = `${name} \u2014 Calmly Writer`;
+  document.title = `${name} \u2014 Orison Writer`;
   setContent(file.content);
   state.isDirty = false;
   updateStats();
@@ -77,7 +77,7 @@ export async function saveCurrentFile() {
         return false;
       }
       fileNameEl.textContent = state.currentFile;
-      document.title = `${state.currentFile} \u2014 Calmly Writer`;
+      document.title = `${state.currentFile} \u2014 Orison Writer`;
     } else {
       const ok = await API.saveFile(state.currentFile, md);
       if (!ok) {
@@ -114,7 +114,7 @@ export async function saveAsFile() {
     }
     state.currentFile = fname;
     fileNameEl.textContent = fname;
-    document.title = `${fname} \u2014 Calmly Writer`;
+    document.title = `${fname} \u2014 Orison Writer`;
     state.isDirty = false;
     setSaveStatus('Saved', 'saved');
     localStorage.setItem('calmly-current', JSON.stringify({ name: fname, content: md }));
@@ -149,7 +149,7 @@ export function uploadLocalFile() {
     setContent(content);
     state.currentFile = sanitizeName(file.name);
     fileNameEl.textContent = state.currentFile;
-    document.title = `${state.currentFile} \u2014 Calmly Writer`;
+    document.title = `${state.currentFile} \u2014 Orison Writer`;
     state.isDirty = true;
     updateStats();
     setSaveStatus('Unsaved', 'unsaved');
@@ -183,7 +183,7 @@ export async function confirmAndDeleteFile(name) {
       clearContent();
       state.currentFile = null;
       fileNameEl.textContent = 'Untitled';
-      document.title = 'Untitled \u2014 Calmly Writer';
+      document.title = 'Untitled \u2014 Orison Writer';
       state.isDirty = false;
       setSaveStatus('', '');
       updateStats();
@@ -281,7 +281,7 @@ export function initiateRename() {
       await API.deleteFile(currentName);
       state.currentFile = newName;
       fileNameEl.textContent = newName;
-      document.title = `${newName} \u2014 Calmly Writer`;
+      document.title = `${newName} \u2014 Orison Writer`;
       setSaveStatus('Saved', 'saved');
       showToast(`Renamed to "${newName}"`, 'success');
     } catch {

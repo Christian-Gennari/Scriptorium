@@ -1,6 +1,6 @@
-# CalmlyWriterClone
+# Orison Writer
 
-A self-hosted clone of Calmly Writer — a distraction-free writing environment.
+A distraction-free, self-hosted writing environment.
 
 ## Backup
 

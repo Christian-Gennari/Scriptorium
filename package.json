@@ -1,7 +1,7 @@
 {
-  "name": "calmlywriterclone",
+  "name": "orison-writer",
   "version": "1.0.0",
-  "description": "Just a clone of a writing program I like, but since it is closed source I am replicating it and selfhosting it, so that I may access my writing studio environment with VPN from anywhere.",
+  "description": "A distraction-free, self-hosted writing environment.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Christian-Gennari/CalmlyWriterClone.git"
+    "url": "git+https://github.com/Christian-Gennari/orison-writer.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/Christian-Gennari/CalmlyWriterClone/issues"
+    "url": "https://github.com/Christian-Gennari/orison-writer/issues"
   },
-  "homepage": "https://github.com/Christian-Gennari/CalmlyWriterClone#readme",
+  "homepage": "https://github.com/Christian-Gennari/orison-writer#readme",
   "dependencies": {
     "@tiptap/core": "^3.23.2",
     "@tiptap/extension-bubble-menu": "^3.23.2",
