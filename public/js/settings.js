@@ -3,9 +3,9 @@ import { API } from './api.js';
 import { showToast } from './ui.js';
 
 const DEFAULT_SETTINGS = {
-  theme: 'light',
+  theme: 'study',
   textWidth: 60,
-  font: 'serif',
+  font: "'Crimson Pro', Georgia, serif",
   fontSize: 18,
   lineSpacing: 1.6,
 
