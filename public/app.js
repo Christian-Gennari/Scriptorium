@@ -166,6 +166,12 @@ editor.addEventListener('keydown', (e) => {
     editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
     editor.selectionStart = editor.selectionEnd = start + 2;
   }
+  if (e.repeat) return;
+  if (e.key.length === 1 || e.key === 'Enter' || e.key === 'Backspace') {
+    if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+      playTypewriterSound(e.key === 'Enter');
+    }
+  }
 });
 
 function sanitizeName(name) {
@@ -250,6 +256,48 @@ function closeModal() {
   document.getElementById('open-modal').classList.add('hidden');
 }
 
+// Typewriter sounds
+let audioCtx = null;
+let lastSoundTime = 0;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playTypewriterSound(isEnter = false) {
+  if (!settings.typewriterSounds) return;
+  const now = Date.now();
+  if (now - lastSoundTime < 40) return;
+  lastSoundTime = now;
+  const ctx = getAudioContext();
+  const duration = isEnter ? 0.08 : 0.04;
+  const bufferSize = Math.floor(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * (isEnter ? 0.02 : 0.008)));
+  }
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.25, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = isEnter ? 600 : 1200;
+  filter.Q.value = isEnter ? 2.0 : 1.5;
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+  source.start();
+}
+
 // Settings
 function applySettings(s) {
   settings = s;
@@ -277,6 +325,7 @@ function applySettings(s) {
   document.getElementById('setting-smartquotes').checked = s.smartQuotes;
   document.getElementById('setting-smartdashes').checked = s.smartDashes;
   document.getElementById('setting-spellcheck').checked = s.spellCheck;
+  document.getElementById('setting-typewriter').checked = s.typewriterSounds;
 
   document.body.classList.toggle('distraction-free', s.distractionFree);
 }
@@ -355,6 +404,9 @@ document.getElementById('setting-smartdashes').addEventListener('change', (e) =>
 document.getElementById('setting-spellcheck').addEventListener('change', (e) => {
   editor.spellcheck = e.target.checked;
   updateSetting('spellCheck', e.target.checked);
+});
+document.getElementById('setting-typewriter').addEventListener('change', (e) => {
+  updateSetting('typewriterSounds', e.target.checked);
 });
 
 // Toolbar buttons
