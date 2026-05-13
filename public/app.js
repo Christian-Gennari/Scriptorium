@@ -340,6 +340,14 @@ function closeSettings() {
   document.getElementById('settings-panel').classList.add('hidden');
 }
 
+function openShortcuts() {
+  document.getElementById('shortcuts-modal').classList.remove('hidden');
+}
+
+function closeShortcuts() {
+  document.getElementById('shortcuts-modal').classList.add('hidden');
+}
+
 function debouncedSaveSettings() {
   clearTimeout(settingsSaveTimeout);
   settingsSaveTimeout = setTimeout(() => {
@@ -425,6 +433,9 @@ document.getElementById('btn-upload-file').addEventListener('click', uploadLocal
 document.querySelectorAll('.btn-close-modal, #open-modal .modal-backdrop').forEach(el => {
   el.addEventListener('click', closeModal);
 });
+document.getElementById('btn-shortcuts').addEventListener('click', openShortcuts);
+document.getElementById('btn-close-shortcuts').addEventListener('click', closeShortcuts);
+document.getElementById('shortcuts-backdrop').addEventListener('click', closeShortcuts);
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
@@ -437,6 +448,7 @@ document.addEventListener('keydown', (e) => {
   else if (ctrl && e.key === ',') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (ctrl && e.shiftKey && e.key === 'F') { e.preventDefault(); toggleDistractionFree(); }
+  else if (e.key === '?' && document.activeElement !== editor) { e.preventDefault(); openShortcuts(); }
 });
 
 function toggleDistractionFree() {

@@ -125,6 +125,9 @@
         Typewriter sounds
       </label>
     </div>
+    <div class="setting-group">
+      <button id="btn-shortcuts" class="shortcuts-trigger">Keyboard shortcuts</button>
+    </div>
   </div>
 </div>
 
@@ -140,6 +143,29 @@
     </div>
     <div class="modal-footer">
       <button id="btn-upload-file">Upload local file</button>
+    </div>
+  </div>
+</div>
+
+<div id="shortcuts-modal" class="hidden">
+  <div class="modal-backdrop" id="shortcuts-backdrop"></div>
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Keyboard Shortcuts</h2>
+      <button id="btn-close-shortcuts">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="shortcut-grid">
+        <div class="shortcut-row"><kbd>Ctrl+N</kbd><span>New document</span></div>
+        <div class="shortcut-row"><kbd>Ctrl+O</kbd><span>Open file</span></div>
+        <div class="shortcut-row"><kbd>Ctrl+S</kbd><span>Save</span></div>
+        <div class="shortcut-row"><kbd>Ctrl+Shift+S</kbd><span>Save As</span></div>
+        <div class="shortcut-row"><kbd>Ctrl+P</kbd><span>Print</span></div>
+        <div class="shortcut-row"><kbd>Ctrl+,</kbd><span>Settings</span></div>
+        <div class="shortcut-row"><kbd>F11</kbd><span>Fullscreen</span></div>
+        <div class="shortcut-row"><kbd>Ctrl+Shift+F</kbd><span>Distraction-free</span></div>
+        <div class="shortcut-row"><kbd>?</kbd><span>Keyboard shortcuts</span></div>
+      </div>
     </div>
   </div>
 </div>
