@@ -37,7 +37,14 @@ document.addEventListener('keydown', (e) => {
   else if (mod && e.code === 'Comma') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (mod && e.shiftKey && e.code === 'KeyF') { e.preventDefault(); toggleDistractionFree(); }
-  else if (e.key === 'Escape' && document.getElementById('sidebar').classList.contains('open')) { closeSidebar(); }
+  else if (e.key === 'Escape') {
+    if (!document.getElementById('shortcuts-modal').classList.contains('hidden')) { closeShortcuts(); return; }
+    if (!document.getElementById('open-modal').classList.contains('hidden')) { closeModal(); return; }
+    if (!document.getElementById('dialog-modal').classList.contains('hidden')) { return; }
+    const s = document.getElementById('sidebar');
+    if (s.classList.contains('show-settings')) { closeSettings(); }
+    else if (s.classList.contains('open')) { closeSidebar(); }
+  }
   else if (e.key === '?' && !document.activeElement?.closest('#editor')) { e.preventDefault(); openShortcuts(); }
   else if (mod && e.code === 'KeyM') { e.preventDefault(); toggleSidebar(); }
 });
