@@ -22,6 +22,7 @@ const DEFAULT_SETTINGS = {
   smartQuotes: true,
   smartDashes: true,
   spellCheck: false,
+  typewriterSounds: false,
 };
 
 function ensureDataDir() {
@@ -142,6 +143,7 @@ const SETTINGS_TYPES = {
   smartQuotes: 'boolean',
   smartDashes: 'boolean',
   spellCheck: 'boolean',
+  typewriterSounds: 'boolean',
 };
 
 app.put('/api/settings', (req, res) => {
