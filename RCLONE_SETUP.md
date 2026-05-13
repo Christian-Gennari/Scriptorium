@@ -1,113 +1,138 @@
-# Rclone Backup Setup (Recommended)
+# Rclone Backup Setup
 
-> Sync your documents to MEGA.nz (or any cloud provider) for safe, automatic backups.
+*Synchronize your local documents with a cloud storage provider (e.g., MEGA, Google Drive, Dropbox, S3). The steps below work on Linux, macOS, and Windows.*
 
-## Why Rclone?
+## 1. Why use Rclone?
 
--   **Decoupled** — backup runs independently of the app. An app bug can't corrupt your backups.
--   **Battle-tested** — handles resumable uploads, deduplication, encryption, retries.
--   **One-way safe** — `rclone copy` never deletes anything on the remote.
--   **Supports 40+ providers** — MEGA, Google Drive, Dropbox, S3, etc.
+- **Independent of the app** – Backups run separate from Scriptorium, so a crash in the app cannot corrupt the backup.
+- **Resumable and reliable** – Handles interrupted uploads, retries, deduplication, and optional encryption.
+- **One‑way copy** – `rclone copy` adds or updates files on the remote but never deletes anything there.
+- **Broad provider support** – Works with 40+ cloud services, including MEGA, Google Drive, Dropbox, Amazon S3, etc.
 
-## Installation
+## 2. Install Rclone
 
-```bash
-# Linux (Ubuntu/Debian)
-sudo -v ; curl https://rclone.org/install.sh | sudo bash
+| Platform | Command |
+|----------|---------|
+| **Linux (Ubuntu/Debian)** | `sudo -v && curl https://rclone.org/install.sh | sudo bash` |
+| **macOS** | `brew install rclone` |
+| **Windows** | Download the latest release from the [Rclone website](https://rclone.org/downloads/) and unzip the executable to a folder in your `PATH`. |
 
-# macOS
-brew install rclone
-
-# Windows
-# Download from https://rclone.org/downloads/
-```
-
-Verify: `rclone version`
-
-## Configure MEGA.nz
+Verify the installation:
 
 ```bash
-rclone config
+rclone version
 ```
+You should see the version string printed without errors.
 
-Follow the prompts:
+## 3. Configure a Remote (example: MEGA)
 
-1.  `n` — new remote
-2.  Name: `Mega`
-3.  Storage: search for `mega` and select the number
-4.  Leave `user`, `pass` blank (you'll authenticate via browser or paste a link)
-5.  Follow the link rclone gives you, log in to MEGA, and paste the resulting code back
-6.  `n` — no advanced config
-7.  `y` — confirm
+1. Run the configuration wizard: `rclone config`
+2. Choose `n` → *new remote*.
+3. Name the remote (e.g., `Mega`).
+4. Select the storage type by typing its number (search for “mega”).
+5. Leave `user` and `pass` blank – authentication will be done via a browser link.
+6. The wizard prints a URL; open it in a browser, sign in to MEGA, and paste the verification code back into the terminal.
+7. When asked for “Advanced config?”, answer `n`.
+8. Confirm the settings with `y`.
 
-Test: `rclone ls Mega:`
-
-## Daily Backup (Safe — Never Deletes)
+Test the connection:
 
 ```bash
-# One-way sync — adds/updates files remotely, never deletes anything
-rclone copy ./data/documents Mega:CalmlyBackup
+rclone ls Mega:
 ```
+You should see a list of the files in the root of your MEGA account (or an empty list if none exist).
 
-### Automate with Cron
+*The same process works for any other provider – just pick the appropriate storage type in step 4.*
+
+## 4. Perform a Daily Backup (one‑way copy)
+
+```bash
+# Copies new/changed files from the local documents folder to the remote.
+# Existing remote files are never deleted.
+ rclone copy ./data/documents Mega:ScriptoriumBackup
+```
+- `./data/documents` – Path to the folder you want to back up (relative to the project root).
+- `Mega:ScriptoriumBackup` – Remote name (`Mega`) and destination folder (`ScriptoriumBackup`).
+
+## 5. Automate the Backup with cron (Linux/macOS)
+
+Edit the crontab:
 
 ```bash
 crontab -e
-# Add this line to run every 4 hours:
-0 */4 * * * rclone copy /path/to/scriptorium/data/documents Mega:CalmlyBackup
 ```
+Add a line to run the backup every 4 hours (adjust the path if you run the command from another directory):
 
-## Monthly Cleanup (Delete Remotely-Deleted Files)
-
-When you delete a document locally, `rclone copy` leaves it on MEGA forever. Run this **manually** after verifying your deletions were intentional:
-
-```bash
-# Dry run — see what would be deleted without actually deleting
-rclone sync --dry-run ./data/documents Mega:CalmlyBackup
-
-# If the list looks right, run for real with archive backup:
-rclone sync --backup-dir Mega:Archive/$(date +%Y-%m) ./data/documents Mega:CalmlyBackup
+```cron
+0 */4 * * * rclone copy /full/path/to/scriptorium/data/documents Mega:ScriptoriumBackup
 ```
+> **Tip:** Use `pwd` to obtain the absolute path to `data/documents` if you are not running the command from the project root.
 
-This moves deleted files to `Archive/2026-05/` on MEGA instead of deleting them permanently. You can manually purge old archives after 30–90 days.
+## 6. Clean Up Remote‑Deleted Files (optional)
 
-## Restoring from Backup
+`rclone copy` never removes files on the remote, so deleted local files stay in the backup. When you are sure a deletion is intentional, you can sync the remote to match the local state while keeping an archive of removed files.
 
-```bash
-# List backed-up files
-rclone ls Mega:CalmlyBackup
+1. **Dry‑run first** (shows what would be deleted, no changes are made):
 
-# Restore a single file
-rclone copy Mega:CalmlyBackup/Whyareyou.md ./data/documents/
+    ```bash
+    rclone sync --dry-run ./data/documents Mega:ScriptoriumBackup
+    ```
+2. **Run the real sync** with an archive directory for deleted items:
 
-# Restore everything
-rclone copy Mega:CalmlyBackup ./data/documents/
+    ```bash
+    rclone sync \
+      --backup-dir Mega:Archive/$(date +%Y-%m) \
+      ./data/documents Mega:ScriptoriumBackup
+    ```
+Deleted files are moved to a folder such as `Mega:Archive/2026-05/`. You can later prune old archives manually (e.g., keep them for 30‑90 days).
 
-# Find a deleted file in an archive
-rclone ls Mega:Archive/2026-04/
-```
+## 7. Restoring Files
 
-## Docker Volume Notes
+| Goal | Command |
+|------|---------|
+| List backed‑up files | `rclone ls Mega:ScriptoriumBackup` |
+| Restore a single file | `rclone copy Mega:ScriptoriumBackup/filename.md ./data/documents/` |
+| Restore the entire backup | `rclone copy Mega:ScriptoriumBackup ./data/documents/` |
+| Browse an archive (e.g., May 2026) | `rclone ls Mega:Archive/2026-05/` |
 
-If running via Docker, the documents are in a named volume. Back up from the **host** by syncing the volume's bind-mount path, or run rclone inside a sidecar container.
+Replace `filename.md` with the actual file you need.
 
-### Host bind mount (recommended for backup)
+## 8. Docker Users – Where to Run Rclone
 
-```yaml
-# docker-compose.yml
-services:
-  app:
-    image: scriptorium
-    volumes:
-      - ./data:/app/data   # ← bind mount, easy to rclone from host
+If Scriptorium runs inside Docker, the `/app/data` volume is usually a **named volume**. To back up from the host:
 
-Then point rclone at `./data/documents` on the host (or wherever you cloned the project).
+1. Use a bind‑mount in `docker‑compose.yml` (recommended for backup):
 
-## Quick Reference
+    ```yaml
+    services:
+      app:
+        image: scriptorium
+        volumes:
+          - ./data:/app/data   # host folder ./data is mounted inside the container
+    ```
+2. Run `rclone` on the host, pointing at the bind‑mounted path:
 
-| Command | Effect | Safe? |
-|---|---|---|
-| `rclone copy src Mega:dest` | Adds/updates, never deletes | ✅ |
-| `rclone sync src Mega:dest` | Makes remote identical to local | ⚠️ Deletes orphaned files |
-| `rclone sync --backup-dir` | Sync + archives deleted files | ✅ Safer sync |
-| `rclone --dry-run ...` | Preview without changes | ✅ |
+    ```bash
+rclone copy ./data/documents Mega:ScriptoriumBackup
+# If you prefer the remote to exactly mirror the local directory, you can use `rclone sync` instead of `rclone copy`. Be aware that `sync` will delete files on the remote that no longer exist locally.
+    ```
+
+Alternatively, you can run `rclone` inside a side‑car container that shares the same volume.
+
+## 9. Quick Reference
+
+| Command | Effect | Deletes remote files? |
+|---------|--------|-----------------------|
+| `rclone copy src remote:dest` | Adds/updates files; never deletes | No |
+| `rclone sync src remote:dest` | Makes remote identical to local (deletes orphaned files) | Yes |
+| `rclone sync --backup-dir remote:Archive/$(date +%Y-%m)` | Sync + archives removed files | No (files go to archive) |
+| `rclone --dry-run …` | Shows what would happen, without changes | N/A |
+
+### Test Your Setup
+
+1. Run `rclone version` – should report the installed version.
+2. Run `rclone ls Mega:` – should list your remote’s root.
+3. Execute a short `rclone copy` of a test file and verify it appears in `Mega:ScriptoriumBackup`.
+4. (Optional) Schedule the cron job and confirm it triggers at the expected times.
+
+You now have a reliable, automated backup pipeline using Rclone. Feel free to replace `Mega` with any other supported cloud provider by creating a new remote in step 3.
