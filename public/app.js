@@ -44,6 +44,21 @@ const API = {
   },
 };
 
+const DEFAULT_SETTINGS = {
+  theme: 'light',
+  textWidth: 60,
+  font: 'serif',
+  fontSize: 18,
+  lineSpacing: 1.6,
+  caretColor: '#333333',
+  fontColor: '#333333',
+  distractionFree: false,
+  smartQuotes: true,
+  smartDashes: true,
+  spellCheck: false,
+  typewriterSounds: false,
+};
+
 let currentFile = null;
 let settings = {};
 let saveTimeout = null;
@@ -57,14 +72,20 @@ const charCountEl = document.getElementById('char-count');
 const readingTimeEl = document.getElementById('reading-time');
 const saveStatusEl = document.getElementById('save-status');
 
+function setSaveStatus(text, type) {
+  saveStatusEl.textContent = text;
+  saveStatusEl.className = type ? `save-status--${type}` : '';
+}
+
 function newDocument() {
   if (isDirty && !confirm('Discard unsaved changes?')) return;
   editor.value = '';
   currentFile = null;
   fileNameEl.textContent = 'Untitled';
+  document.title = 'Untitled — Calmly Writer';
   isDirty = false;
   updateStats();
-  saveStatusEl.textContent = '';
+  setSaveStatus('', '');
   localStorage.removeItem('calmly-current');
 }
 
@@ -83,9 +104,10 @@ async function openFile(name) {
   editor.value = file.content;
   currentFile = name;
   fileNameEl.textContent = name;
+  document.title = `${name} — Calmly Writer`;
   isDirty = false;
   updateStats();
-  saveStatusEl.textContent = 'Saved';
+  setSaveStatus('Saved', 'saved');
   closeModal();
   localStorage.setItem('calmly-current', JSON.stringify({ name, content: file.content }));
 }
@@ -99,25 +121,26 @@ async function saveCurrentFile() {
       else currentFile = name;
       const ok = await API.createFile(currentFile, editor.value);
       if (!ok) {
-        saveStatusEl.textContent = 'Error saving';
+        setSaveStatus('Error saving', 'error');
         showToast('Failed to save file', 'error');
         return false;
       }
       fileNameEl.textContent = currentFile;
+      document.title = `${currentFile} — Calmly Writer`;
     } else {
       const ok = await API.saveFile(currentFile, editor.value);
       if (!ok) {
-        saveStatusEl.textContent = 'Error saving';
+        setSaveStatus('Error saving', 'error');
         showToast('Failed to save file', 'error');
         return false;
       }
     }
     isDirty = false;
-    saveStatusEl.textContent = 'Saved';
+    setSaveStatus('Saved', 'saved');
     localStorage.setItem('calmly-current', JSON.stringify({ name: currentFile, content: editor.value }));
     return true;
   } catch {
-    saveStatusEl.textContent = 'Error saving';
+    setSaveStatus('Error saving', 'error');
     showToast('Connection lost. Changes saved locally.', 'error');
     return false;
   }
@@ -139,8 +162,9 @@ async function saveAsFile() {
     }
     currentFile = fname;
     fileNameEl.textContent = fname;
+    document.title = `${fname} — Calmly Writer`;
     isDirty = false;
-    saveStatusEl.textContent = 'Saved';
+    setSaveStatus('Saved', 'saved');
     updateStats();
   } catch {
     showToast('Connection lost. Could not save file.', 'error');
@@ -150,11 +174,11 @@ async function saveAsFile() {
 function triggerAutoSave() {
   if (!currentFile) {
     isDirty = true;
-    saveStatusEl.textContent = 'Unsaved';
+    setSaveStatus('Unsaved', 'unsaved');
     return;
   }
   isDirty = true;
-  saveStatusEl.textContent = 'Saving...';
+  setSaveStatus('Saving...', 'saving');
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(() => {
     saveCurrentFile();
@@ -184,8 +208,7 @@ editor.addEventListener('keydown', (e) => {
     e.preventDefault();
     const start = editor.selectionStart;
     const end = editor.selectionEnd;
-    editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
-    editor.selectionStart = editor.selectionEnd = start + 2;
+    editor.setRangeText('  ', start, end, 'end');
   }
   if (e.repeat) return;
   if (e.key.length === 1 || e.key === 'Enter' || e.key === 'Backspace') {
@@ -236,9 +259,10 @@ function uploadLocalFile() {
     editor.value = content;
     currentFile = sanitizeName(file.name);
     fileNameEl.textContent = currentFile;
+    document.title = `${currentFile} — Calmly Writer`;
     isDirty = true;
     updateStats();
-    saveStatusEl.textContent = 'Unsaved';
+    setSaveStatus('Unsaved', 'unsaved');
     closeModal();
   };
   input.click();
@@ -269,8 +293,9 @@ async function confirmAndDeleteFile(name) {
       editor.value = '';
       currentFile = null;
       fileNameEl.textContent = 'Untitled';
+      document.title = 'Untitled — Calmly Writer';
       isDirty = false;
-      saveStatusEl.textContent = '';
+      setSaveStatus('', '');
       updateStats();
       localStorage.removeItem('calmly-current');
     }
@@ -293,21 +318,27 @@ async function populateFileList() {
     files.forEach(f => {
       const li = document.createElement('li');
       li.className = 'file-item';
-      li.innerHTML = `
-        <span class="file-item-name">${f.name}</span>
-        <span class="file-item-right">
-          <span class="file-date">${new Date(f.modified).toLocaleDateString()}</span>
-          <button class="btn-delete-file" data-name="${f.name}" title="Delete ${f.name}">&times;</button>
-        </span>
-      `;
-      li.querySelector('.file-item-name').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openFile(f.name);
-      });
-      li.querySelector('.btn-delete-file').addEventListener('click', (e) => {
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'file-item-name';
+      nameSpan.textContent = f.name;
+      nameSpan.addEventListener('click', () => openFile(f.name));
+      const rightSpan = document.createElement('span');
+      rightSpan.className = 'file-item-right';
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'file-date';
+      dateSpan.textContent = new Date(f.modified).toLocaleDateString();
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-delete-file';
+      delBtn.title = `Delete ${f.name}`;
+      delBtn.textContent = '×';
+      delBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         confirmAndDeleteFile(f.name);
       });
+      rightSpan.appendChild(dateSpan);
+      rightSpan.appendChild(delBtn);
+      li.appendChild(nameSpan);
+      li.appendChild(rightSpan);
       list.appendChild(li);
     });
   } catch {
@@ -369,7 +400,7 @@ function playTypewriterSound(isEnter = false) {
 
 // Settings
 function applySettings(s) {
-  settings = s;
+  settings = { ...DEFAULT_SETTINGS, ...s };
 
   document.body.className = `theme-${s.theme}`;
   editor.style.maxWidth = s.textWidth + 'ch';
@@ -552,7 +583,8 @@ async function init() {
       if (parsed.name) {
         currentFile = parsed.name;
         fileNameEl.textContent = parsed.name;
-        saveStatusEl.textContent = 'Saved';
+        setSaveStatus('Saved', 'saved');
+        document.title = `${parsed.name} — Calmly Writer`;
       }
       updateStats();
     } catch {}

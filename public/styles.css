@@ -151,6 +151,22 @@ body {
   color: var(--text-secondary);
 }
 
+.save-status--saved {
+  color: #388e3c;
+}
+
+.save-status--saving {
+  color: #f57c00;
+}
+
+.save-status--unsaved {
+  color: #d32f2f;
+}
+
+.save-status--error {
+  color: #d32f2f;
+}
+
 /* Settings Panel */
 #settings-overlay {
   position: fixed;
