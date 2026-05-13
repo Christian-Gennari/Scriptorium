@@ -110,6 +110,15 @@
         </label>
       </div>
       <div class="setting-group">
+        <label class="toggle-row">
+          <span>Table of contents</span>
+          <span class="toggle">
+            <input type="checkbox" id="setting-toc">
+            <span class="toggle-knob"></span>
+          </span>
+        </label>
+      </div>
+      <div class="setting-group">
         <button id="btn-shortcuts" class="shortcuts-trigger">Keyboard shortcuts</button>
       </div>
     </div>
@@ -126,6 +135,11 @@
   <div id="editor-container">
     <div id="editor"></div>
   </div>
+</div>
+
+<div id="toc-panel">
+  <div class="toc-header">Contents</div>
+  <div id="toc-list"></div>
 </div>
 
 <div id="bubble-menu" class="bubble-menu">
@@ -193,6 +207,7 @@
   <span id="floating-word-count"></span>
   <span id="floating-char-count"></span>
   <span id="floating-reading-time"></span>
+  <span id="toc-trigger" class="toc-trigger">Contents</span>
 </div>
 
 <div id="dialog-overlay" class="hidden"></div>

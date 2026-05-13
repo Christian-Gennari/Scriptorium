@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
   distractionFree: false,
   spellCheck: false,
   typewriterSounds: false,
+  showTableOfContents: false,
 };
 
 function ensureDataDir() {
@@ -142,6 +143,7 @@ const SETTINGS_TYPES = {
   distractionFree: 'boolean',
   spellCheck: 'boolean',
   typewriterSounds: 'boolean',
+  showTableOfContents: 'boolean',
 };
 
 app.put('/api/settings', (req, res) => {

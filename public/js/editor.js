@@ -1,5 +1,6 @@
 import { state, editorEl, setTiptapEditor } from './state.js';
 import { updateStats } from './ui.js';
+import { updateToc } from './toc.js';
 import { triggerAutoSave } from './files.js';
 import { playTypewriterSound } from './audio.js';
 import { markdownToHtml } from './markdown.js';
@@ -52,6 +53,7 @@ export function initEditor(markdownContent = '') {
         triggerAutoSave();
       }
       updateStats();
+      updateToc();
     },
     editorProps: {
       handleKeyDown: (view, event) => {
@@ -111,5 +113,6 @@ export function initEditor(markdownContent = '') {
   }
 
   setTiptapEditor(editor);
+  updateToc();
   return editor;
 }

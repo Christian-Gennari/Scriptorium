@@ -4,6 +4,7 @@ import { showToast, setSaveStatus, updateStats, toggleSidebar, closeSidebar, tog
 import { applySettings, openSettings, closeSettings, openShortcuts, closeShortcuts, toggleDistractionFree } from './settings.js';
 import { newDocument, openModal, saveCurrentFile, saveAsFile, uploadLocalFile, downloadCurrentFile, closeModal } from './files.js';
 import { initEditor } from './editor.js';
+import { initToc, closeToc } from './toc.js';
 import { preloadSamples } from './audio.js';
 
 document.getElementById('btn-new').addEventListener('click', newDocument);
@@ -44,6 +45,7 @@ document.addEventListener('keydown', (e) => {
     if (!document.getElementById('shortcuts-modal').classList.contains('hidden')) { closeShortcuts(); return; }
     if (!document.getElementById('open-modal').classList.contains('hidden')) { closeModal(); return; }
     if (!document.getElementById('dialog-modal').classList.contains('hidden')) { return; }
+    if (closeToc()) return;
     const s = document.getElementById('sidebar');
     if (s.classList.contains('show-settings')) { closeSettings(); }
     else if (s.classList.contains('open')) { closeSidebar(); }
@@ -77,6 +79,7 @@ async function init() {
   }
 
   initEditor(initialContent);
+  initToc();
   updateStats();
   preloadSamples();
 
