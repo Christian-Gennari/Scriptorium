@@ -2,7 +2,6 @@ node_modules/
 .opencode/
 .env
 *.log
-data/*.md
+data/documents/*.md
 data/settings.json
-!data/.gitkeep
 public/dist/

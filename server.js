@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
+const DOCUMENTS_DIR = path.join(DATA_DIR, 'documents');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
 app.use(express.json());
@@ -26,25 +27,28 @@ function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
+  if (!fs.existsSync(DOCUMENTS_DIR)) {
+    fs.mkdirSync(DOCUMENTS_DIR, { recursive: true });
+  }
 }
 
 function filePath(name) {
   let safe = path.basename(name).replace(/[^\p{L}\p{N}._-]/gu, '');
   if (!safe) safe = 'untitled';
   if (!safe.toLowerCase().endsWith('.md')) safe += '.md';
-  return path.join(DATA_DIR, safe);
+  return path.join(DOCUMENTS_DIR, safe);
 }
 
 app.get('/api/files', (req, res) => {
   ensureDataDir();
   try {
-    const files = fs.readdirSync(DATA_DIR)
+    const files = fs.readdirSync(DOCUMENTS_DIR)
       .filter(f => f.endsWith('.md'))
       .map(f => ({
         name: f,
         path: f,
-        size: fs.statSync(path.join(DATA_DIR, f)).size,
-        modified: fs.statSync(path.join(DATA_DIR, f)).mtime,
+        size: fs.statSync(path.join(DOCUMENTS_DIR, f)).size,
+        modified: fs.statSync(path.join(DOCUMENTS_DIR, f)).mtime,
       }));
     res.json(files);
   } catch (err) {
