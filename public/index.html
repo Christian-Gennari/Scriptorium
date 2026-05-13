@@ -172,6 +172,26 @@
   </div>
 </div>
 
+<div id="dialog-overlay" class="hidden"></div>
+<div id="dialog-modal" class="hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="dialog-title">Confirm</h2>
+      <button id="dialog-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="dialog-message"></p>
+      <div id="dialog-prompt-field" class="hidden">
+        <input type="text" id="dialog-input" class="dialog-input">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="dialog-cancel" class="dialog-btn-secondary">Cancel</button>
+      <button id="dialog-confirm" class="dialog-btn-primary">OK</button>
+    </div>
+  </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>

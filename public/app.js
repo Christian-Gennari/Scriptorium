@@ -77,8 +77,8 @@ function setSaveStatus(text, type) {
   saveStatusEl.className = type ? `save-status--${type}` : '';
 }
 
-function newDocument() {
-  if (isDirty && !confirm('Discard unsaved changes?')) return;
+async function newDocument() {
+  if (isDirty && !await showDialog({ title: 'New Document', message: 'Discard unsaved changes?' })) return;
   editor.value = '';
   currentFile = null;
   fileNameEl.textContent = 'Untitled';
@@ -115,7 +115,7 @@ async function openFile(name) {
 async function saveCurrentFile() {
   try {
     if (!currentFile) {
-      const name = prompt('File name:', 'untitled.md');
+      const name = await showDialog({ title: 'Save', message: 'File name:', prompt: 'untitled.md', confirmLabel: 'Save' });
       if (!name) return false;
       if (!name.toLowerCase().endsWith('.md')) currentFile = name + '.md';
       else currentFile = name;
@@ -147,13 +147,13 @@ async function saveCurrentFile() {
 }
 
 async function saveAsFile() {
-  const name = prompt('Save as:', currentFile || 'untitled.md');
+  const name = await showDialog({ title: 'Save As', message: 'Save as:', prompt: currentFile || 'untitled.md', confirmLabel: 'Save' });
   if (!name) return;
   const fname = name.toLowerCase().endsWith('.md') ? name : name + '.md';
   try {
     const exists = await API.getFile(fname);
     if (exists) {
-      if (!confirm(`"${fname}" already exists. Overwrite?`)) return;
+      if (!await showDialog({ title: 'Overwrite', message: `"${fname}" already exists. Overwrite?`, confirmLabel: 'Overwrite', confirmClass: 'dialog-btn-primary' })) return;
       const ok = await API.saveFile(fname, editor.value);
       if (!ok) { showToast('Failed to save file', 'error'); return; }
     } else {
@@ -266,6 +266,73 @@ function showToast(message, type = 'error', duration = 4000) {
   }, duration);
 }
 
+function showDialog({ title, message, prompt: promptDefault, confirmLabel, confirmClass }) {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById('dialog-overlay');
+    const modal = document.getElementById('dialog-modal');
+    const titleEl = document.getElementById('dialog-title');
+    const messageEl = document.getElementById('dialog-message');
+    const inputField = document.getElementById('dialog-prompt-field');
+    const inputEl = document.getElementById('dialog-input');
+    const confirmBtn = document.getElementById('dialog-confirm');
+    const cancelBtn = document.getElementById('dialog-cancel');
+    const closeBtn = document.getElementById('dialog-close');
+
+    titleEl.textContent = title || 'Confirm';
+    messageEl.textContent = message;
+    confirmBtn.textContent = confirmLabel || 'OK';
+
+    if (promptDefault !== undefined) {
+      inputField.classList.remove('hidden');
+      inputEl.value = promptDefault || '';
+    } else {
+      inputField.classList.add('hidden');
+      inputEl.value = '';
+    }
+
+    confirmBtn.className = promptDefault !== undefined
+      ? 'dialog-btn-primary'
+      : (confirmClass || 'dialog-btn-primary');
+
+    overlay.classList.remove('hidden');
+    modal.classList.remove('hidden');
+
+    if (promptDefault !== undefined) {
+      setTimeout(() => { inputEl.focus(); inputEl.select(); }, 50);
+    }
+
+    function cleanup() {
+      overlay.classList.add('hidden');
+      modal.classList.add('hidden');
+      confirmBtn.removeEventListener('click', onConfirm);
+      cancelBtn.removeEventListener('click', onCancel);
+      closeBtn.removeEventListener('click', onCancel);
+      inputEl.removeEventListener('keydown', onInputKey);
+    }
+
+    function onConfirm() {
+      const value = promptDefault !== undefined ? inputEl.value : true;
+      cleanup();
+      resolve(value);
+    }
+
+    function onCancel() {
+      cleanup();
+      resolve(promptDefault !== undefined ? null : false);
+    }
+
+    function onInputKey(e) {
+      if (e.key === 'Enter') onConfirm();
+      if (e.key === 'Escape') onCancel();
+    }
+
+    confirmBtn.addEventListener('click', onConfirm);
+    cancelBtn.addEventListener('click', onCancel);
+    closeBtn.addEventListener('click', onCancel);
+    inputEl.addEventListener('keydown', onInputKey);
+  });
+}
+
 function sanitizeName(name) {
   const sanitized = name.replace(/[^a-zA-Z0-9._-]/g, '');
   return sanitized.toLowerCase().endsWith('.md') ? sanitized : sanitized + '.md';
@@ -316,7 +383,7 @@ function downloadCurrentFile() {
 }
 
 async function confirmAndDeleteFile(name) {
-  if (!confirm(`Delete "${name}" permanently?`)) return;
+  if (!await showDialog({ title: 'Delete', message: `Delete "${name}" permanently?`, confirmLabel: 'Delete' })) return;
   try {
     const ok = await API.deleteFile(name);
     if (!ok) {

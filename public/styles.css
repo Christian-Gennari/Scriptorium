@@ -657,3 +657,64 @@ input[type="checkbox"] {
   color: #d32f2f;
   background: rgba(211, 47, 47, 0.08);
 }
+
+/* Dialog modals (confirm/prompt) */
+#dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 300;
+}
+
+#dialog-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 301;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#dialog-modal .modal {
+  width: 360px;
+}
+
+.dialog-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.dialog-input:focus {
+  outline: 2px solid var(--text-secondary);
+  outline-offset: -1px;
+}
+
+#dialog-message {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.dialog-btn-primary {
+  background: var(--text) !important;
+  color: var(--bg) !important;
+  border: none !important;
+  font-weight: 500;
+}
+
+.dialog-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.dialog-btn-secondary:hover {
+  background: var(--bg-secondary);
+}
