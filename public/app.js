@@ -517,14 +517,14 @@ document.getElementById('shortcuts-backdrop').addEventListener('click', closeSho
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
   const mod = e.altKey || e.metaKey;
-  if (mod && e.key === 'n') { e.preventDefault(); newDocument(); }
-  else if (mod && e.key === 'o') { e.preventDefault(); openModal(); }
-  else if (mod && e.shiftKey && e.key === 's') { e.preventDefault(); saveAsFile().catch(console.error); }
-  else if (mod && e.key === 's') { e.preventDefault(); saveCurrentFile().catch(console.error); }
-  else if (mod && e.key === 'p') { e.preventDefault(); printDocument(); }
-  else if (mod && e.key === ',') { e.preventDefault(); openSettings(); }
+  if (mod && e.code === 'KeyN') { e.preventDefault(); newDocument(); }
+  else if (mod && e.code === 'KeyO') { e.preventDefault(); openModal(); }
+  else if (mod && e.shiftKey && e.code === 'KeyS') { e.preventDefault(); saveAsFile().catch(console.error); }
+  else if (mod && e.code === 'KeyS') { e.preventDefault(); saveCurrentFile().catch(console.error); }
+  else if (mod && e.code === 'KeyP') { e.preventDefault(); printDocument(); }
+  else if (mod && e.code === 'Comma') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
-  else if (mod && e.shiftKey && e.key === 'f') { e.preventDefault(); toggleDistractionFree(); }
+  else if (mod && e.shiftKey && e.code === 'KeyF') { e.preventDefault(); toggleDistractionFree(); }
   else if (e.key === '?' && document.activeElement !== editor) { e.preventDefault(); openShortcuts(); }
 });
 
