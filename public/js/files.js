@@ -1,4 +1,4 @@
-import { state, tiptapEditor, fileNameEl, editorContainer } from './state.js';
+import { state, tiptapEditor, fileNameEl } from './state.js';
 import { API } from './api.js';
 import { showToast, showDialog, setSaveStatus, updateStats } from './ui.js';
 import { htmlToMarkdown, markdownToHtml } from './markdown.js';
@@ -245,35 +245,6 @@ export function openModal() {
 export function closeModal() {
   document.getElementById('open-modal').classList.add('hidden');
 }
-
-editorContainer.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  editorContainer.classList.add('drag-over');
-});
-editorContainer.addEventListener('dragleave', () => {
-  editorContainer.classList.remove('drag-over');
-});
-editorContainer.addEventListener('drop', async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  editorContainer.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
-  if (!file.name.match(/\.(md|txt|html|htm)$/i)) {
-    showToast('Unsupported file type. Use .md, .txt, .html, or .htm', 'error');
-    return;
-  }
-  if (state.isDirty && !await showDialog({ title: 'Drop File', message: 'Discard unsaved changes?' })) return;
-  const content = await file.text();
-  setContent(content);
-  state.currentFile = sanitizeName(file.name);
-  fileNameEl.textContent = state.currentFile;
-  document.title = `${state.currentFile} \u2014 Calmly Writer`;
-  state.isDirty = true;
-  updateStats();
-  setSaveStatus('Unsaved', 'unsaved');
-});
 
 let renameInput = null;
 
