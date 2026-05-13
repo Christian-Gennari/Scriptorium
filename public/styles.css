@@ -190,24 +190,23 @@ body {
 .bubble-menu {
   display: flex;
   align-items: center;
-  gap: 1px;
-  padding: 5px 6px;
+  gap: 2px;
+  padding: 4px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(201, 149, 62, 0.08);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   font-family: var(--font-ui);
-  backdrop-filter: blur(8px);
 }
 
 .bubble-menu button {
   background: none;
   border: none;
-  padding: 5px 9px;
+  padding: 4px 8px;
   cursor: pointer;
   color: var(--text-muted);
-  border-radius: 6px;
-  font-size: 13px;
+  border-radius: 3px;
+  font-size: 12px;
   line-height: 1;
   transition: background 0.12s, color 0.12s;
 }
@@ -220,22 +219,14 @@ body {
 .bubble-menu button.is-active {
   background: var(--accent);
   color: var(--bg-deep);
-  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 .bubble-menu .sep {
   width: 1px;
-  height: 20px;
+  height: 16px;
   background: var(--border);
-  margin: 0 3px;
-  opacity: 0.6;
-}
-
-/* ===== Drag Over ===== */
-.drag-over {
-  outline: 2px dashed var(--accent);
-  outline-offset: -4px;
-  background: var(--accent-glow);
+  margin: 0 1px;
+  flex-shrink: 0;
 }
 
 /* ===== Menu Toggle ===== */
