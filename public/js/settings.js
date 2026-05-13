@@ -46,13 +46,17 @@ export function applySettings(s) {
 }
 
 export function openSettings() {
-  document.getElementById('settings-overlay').classList.remove('hidden');
-  document.getElementById('settings-panel').classList.remove('hidden');
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  sidebar.classList.add('show-settings');
+  if (!sidebar.classList.contains('open')) {
+    sidebar.classList.add('open');
+    backdrop.classList.add('open');
+  }
 }
 
 export function closeSettings() {
-  document.getElementById('settings-overlay').classList.add('hidden');
-  document.getElementById('settings-panel').classList.add('hidden');
+  document.getElementById('sidebar').classList.remove('show-settings');
 }
 
 export function openShortcuts() {

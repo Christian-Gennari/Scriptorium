@@ -13,8 +13,7 @@ document.getElementById('btn-fullscreen').addEventListener('click', toggleFullsc
 document.getElementById('btn-print').addEventListener('click', printDocument);
 document.getElementById('btn-download').addEventListener('click', downloadCurrentFile);
 document.getElementById('btn-settings').addEventListener('click', openSettings);
-document.getElementById('btn-close-settings').addEventListener('click', closeSettings);
-document.getElementById('settings-overlay').addEventListener('click', closeSettings);
+document.getElementById('btn-back-settings').addEventListener('click', closeSettings);
 document.getElementById('btn-upload-file').addEventListener('click', uploadLocalFile);
 document.getElementById('btn-menu-toggle').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-hitbox').addEventListener('click', toggleSidebar);

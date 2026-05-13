@@ -27,6 +27,89 @@
     <button id="btn-fullscreen" class="sidebar-btn" title="Full screen (F11)">Fullscreen</button>
     <button id="btn-settings" class="sidebar-btn" title="Settings (Alt+,)">Settings</button>
   </div>
+  <div class="sidebar-settings">
+    <div class="sidebar-settings-header">
+      <button id="btn-back-settings" class="sidebar-back">&larr; Back</button>
+      <span>Settings</span>
+    </div>
+    <div class="sidebar-settings-body">
+      <div class="setting-group">
+        <label>Theme</label>
+        <select id="setting-theme">
+          <option value="study">Writer's Study</option>
+          <option value="dune">Dune</option>
+          <option value="dark">Dark</option>
+          <option value="black">Black</option>
+          <option value="sepia">Sepia</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label>Text width</label>
+        <div class="setting-with-value">
+          <input type="range" id="setting-textwidth" min="30" max="100" value="60">
+          <span id="setting-textwidth-val">60ch</span>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Font</label>
+        <select id="setting-font">
+          <option value="'Crimson Pro', Georgia, serif">Crimson Pro</option>
+          <option value="'DM Sans', sans-serif">DM Sans</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="serif">Serif</option>
+          <option value="sans-serif">Sans-serif</option>
+          <option value="monospace">Monospace</option>
+          <option value="'OpenDyslexic', serif">OpenDyslexic</option>
+          <option value="'Special Elite', serif">Special Elite</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label>Font size</label>
+        <div class="setting-with-value">
+          <input type="range" id="setting-fontsize" min="12" max="32" value="18">
+          <span id="setting-fontsize-val">18px</span>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Line spacing</label>
+        <div class="setting-with-value">
+          <input type="range" id="setting-linespacing" min="1" max="3" step="0.1" value="1.6">
+          <span id="setting-linespacing-val">1.6</span>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>Distraction-free mode</span>
+          <span class="toggle">
+            <input type="checkbox" id="setting-distractionfree">
+            <span class="toggle-knob"></span>
+          </span>
+        </label>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>Spell check</span>
+          <span class="toggle">
+            <input type="checkbox" id="setting-spellcheck">
+            <span class="toggle-knob"></span>
+          </span>
+        </label>
+      </div>
+      <div class="setting-group">
+        <label class="toggle-row">
+          <span>Typewriter sounds</span>
+          <span class="toggle">
+            <input type="checkbox" id="setting-typewriter">
+            <span class="toggle-knob"></span>
+          </span>
+        </label>
+      </div>
+      <div class="setting-group">
+        <button id="btn-shortcuts" class="shortcuts-trigger">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </div>
   <div class="sidebar-footer">
     <div id="save-status"></div>
     <div id="word-count">0 Words</div>
@@ -55,77 +138,6 @@
   <span class="sep"></span>
   <button data-command="undo" title="Undo (Alt+Z)">&#8630;</button>
   <button data-command="redo" title="Redo (Alt+Shift+Z)">&#8631;</button>
-</div>
-
-<div id="settings-overlay" class="hidden"></div>
-<div id="settings-panel" class="hidden">
-  <div class="settings-header">
-    <h2>Settings</h2>
-    <button id="btn-close-settings">&times;</button>
-  </div>
-  <div class="settings-body">
-    <div class="setting-group">
-      <label>Theme</label>
-      <select id="setting-theme">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-        <option value="black">Black</option>
-        <option value="sepia">Sepia</option>
-        <option value="dune">Dune</option>
-      </select>
-    </div>
-    <div class="setting-group">
-      <label>Text width</label>
-      <div class="setting-with-value">
-        <input type="range" id="setting-textwidth" min="30" max="100" value="60">
-        <span id="setting-textwidth-val">60ch</span>
-      </div>
-    </div>
-    <div class="setting-group">
-      <label>Font</label>
-      <select id="setting-font">
-        <option value="serif">Serif</option>
-        <option value="sans-serif">Sans-serif</option>
-        <option value="monospace">Monospace</option>
-        <option value="OpenDyslexic">OpenDyslexic</option>
-      </select>
-    </div>
-    <div class="setting-group">
-      <label>Font size</label>
-      <div class="setting-with-value">
-        <input type="range" id="setting-fontsize" min="12" max="32" value="18">
-        <span id="setting-fontsize-val">18px</span>
-      </div>
-    </div>
-    <div class="setting-group">
-      <label>Line spacing</label>
-      <div class="setting-with-value">
-        <input type="range" id="setting-linespacing" min="1" max="3" step="0.1" value="1.6">
-        <span id="setting-linespacing-val">1.6</span>
-      </div>
-    </div>
-    <div class="setting-group">
-      <label>
-        <input type="checkbox" id="setting-distractionfree">
-        Distraction-free mode
-      </label>
-    </div>
-    <div class="setting-group">
-      <label>
-        <input type="checkbox" id="setting-spellcheck">
-        Spell check
-      </label>
-    </div>
-    <div class="setting-group">
-      <label>
-        <input type="checkbox" id="setting-typewriter">
-        Typewriter sounds
-      </label>
-    </div>
-    <div class="setting-group">
-      <button id="btn-shortcuts" class="shortcuts-trigger">Keyboard shortcuts</button>
-    </div>
-  </div>
 </div>
 
 <div id="open-modal" class="hidden">
