@@ -1,23 +1,21 @@
 # Scriptorium
 
-I wanted a writing app that felt quiet. No tabs, no toolbars, no
-account — just me and the page. Scriptorium runs on my own server,
-saves everything as plain `.md` files, and stays out of my way.
+A self-hosted writing app. Saves as plain `.md` files. No database,
+no accounts, no telemetry.
 
 ### What it does
 
-- A clean editor with themes that don't hurt after hours of writing
-  — Writer's Study, Mist, Dark, Black, Sepia, Paper
-- Fonts, spacing, colors — tweak until it feels right
-- Auto-saves every few seconds so you never lose anything
-- Focus mode dims everything except the paragraph you're working on
+- A clean editor with themes (Writer's Study, Mist, Dark, Black,
+  Sepia, Paper)
+- Fonts, spacing, colors you can tweak
+- Auto saves every few seconds
+- Focus mode dims everything except your current paragraph
 - Keyboard shortcuts for everything (hit `?` to see them)
 
 ### What it doesn't do
 
-- No accounts, no telemetry, no cloud
-- No lock-in — your files are plain Markdown, readable anywhere
-- No database — just a folder of `.md` files on disk
+- No lock-in. Your files are plain Markdown, readable from any editor.
+- No database. Just a folder of `.md` files on disk.
 
 ---
 
