@@ -1,6 +1,6 @@
 import { state, editorEl } from './state.js';
 import { API } from './api.js';
-import { showToast } from './ui.js';
+import { showToast, overlayPush, overlayPop } from './ui.js';
 
 const DEFAULT_SETTINGS = {
   theme: 'study',
@@ -69,11 +69,13 @@ export function closeSettings() {
 }
 
 export function openShortcuts() {
+  overlayPush();
   document.getElementById('shortcuts-modal').classList.remove('hidden');
 }
 
 export function closeShortcuts() {
   document.getElementById('shortcuts-modal').classList.add('hidden');
+  overlayPop();
 }
 
 export function toggleDistractionFree() {

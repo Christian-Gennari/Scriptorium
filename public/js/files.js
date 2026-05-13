@@ -1,6 +1,6 @@
 import { state, tiptapEditor, fileNameEl } from './state.js';
 import { API } from './api.js';
-import { showToast, showDialog, setSaveStatus, updateStats } from './ui.js';
+import { showToast, showDialog, setSaveStatus, updateStats, overlayPush, overlayPop } from './ui.js';
 import { htmlToMarkdown, markdownToHtml } from './markdown.js';
 
 function sanitizeName(name) {
@@ -118,9 +118,9 @@ export async function saveAsFile() {
     const confirmBtn = document.getElementById('saveas-confirm');
     const cancelBtn = document.getElementById('saveas-cancel');
     const closeBtn = document.querySelector('.btn-close-saveas');
-    const backdrop = document.getElementById('saveas-backdrop');
 
     input.value = state.currentFile || 'untitled.md';
+    overlayPush();
     modal.classList.remove('hidden');
     setTimeout(() => { input.focus(); input.select(); }, 50);
 
@@ -151,10 +151,11 @@ export async function saveAsFile() {
 
     function cleanup() {
       modal.classList.add('hidden');
+      overlayPop();
       confirmBtn.removeEventListener('click', onConfirm);
       cancelBtn.removeEventListener('click', onCancel);
       closeBtn.removeEventListener('click', onCancel);
-      backdrop.removeEventListener('click', onCancel);
+      modal.removeEventListener('click', onContainerClick);
       input.removeEventListener('keydown', onInputKey);
       modal.removeEventListener('keydown', onModalKey);
     }
@@ -167,10 +168,14 @@ export async function saveAsFile() {
       if (e.key === 'Escape') onCancel();
     }
 
+    function onContainerClick(e) {
+      if (e.target === e.currentTarget) onCancel();
+    }
+
     confirmBtn.addEventListener('click', onConfirm);
     cancelBtn.addEventListener('click', onCancel);
     closeBtn.addEventListener('click', onCancel);
-    backdrop.addEventListener('click', onCancel);
+    modal.addEventListener('click', onContainerClick);
     input.addEventListener('keydown', onInputKey);
     modal.addEventListener('keydown', onModalKey);
   });
@@ -326,6 +331,7 @@ function renderFileList(query) {
 export function openModal() {
   const input = document.getElementById('file-search-input');
   input.value = '';
+  overlayPush();
   document.getElementById('open-modal').classList.remove('hidden');
   populateFileList();
   setTimeout(() => input.focus(), 100);
@@ -333,6 +339,7 @@ export function openModal() {
 
 export function closeModal() {
   document.getElementById('open-modal').classList.add('hidden');
+  overlayPop();
 }
 
 let renameInput = null;

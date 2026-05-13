@@ -1,5 +1,17 @@
 import { state, tiptapEditor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl, floatingWordCount, floatingCharCount, floatingReadingTime } from './state.js';
 
+export function overlayPush() {
+  state.modalStack++;
+  document.getElementById('global-overlay').classList.remove('hidden');
+}
+
+export function overlayPop() {
+  state.modalStack = Math.max(0, state.modalStack - 1);
+  if (state.modalStack === 0) {
+    document.getElementById('global-overlay').classList.add('hidden');
+  }
+}
+
 export function showToast(message, type = 'error', duration = 4000) {
   const container = document.getElementById('toast-container');
   const el = document.createElement('div');
@@ -15,7 +27,6 @@ export function showToast(message, type = 'error', duration = 4000) {
 
 export function showDialog({ title, message, prompt: promptDefault, confirmLabel, confirmClass }) {
   return new Promise((resolve) => {
-    const overlay = document.getElementById('dialog-overlay');
     const modal = document.getElementById('dialog-modal');
     const titleEl = document.getElementById('dialog-title');
     const messageEl = document.getElementById('dialog-message');
@@ -43,7 +54,7 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
 
     modal.classList.toggle('dialog-modal--prompt', promptDefault !== undefined);
 
-    overlay.classList.remove('hidden');
+    overlayPush();
     modal.classList.remove('hidden');
 
     if (promptDefault !== undefined) {
@@ -52,12 +63,12 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
 
     function cleanup() {
       modal.classList.remove('dialog-modal--prompt');
-      overlay.classList.add('hidden');
       modal.classList.add('hidden');
+      overlayPop();
       confirmBtn.removeEventListener('click', onConfirm);
       cancelBtn.removeEventListener('click', onCancel);
       closeBtn.removeEventListener('click', onCancel);
-      overlay.removeEventListener('click', onCancel);
+      modal.removeEventListener('click', onContainerClick);
       inputEl.removeEventListener('keydown', onInputKey);
     }
 
@@ -77,10 +88,14 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
       if (e.key === 'Escape') onCancel();
     }
 
+    function onContainerClick(e) {
+      if (e.target === e.currentTarget) onCancel();
+    }
+
     confirmBtn.addEventListener('click', onConfirm);
     cancelBtn.addEventListener('click', onCancel);
     closeBtn.addEventListener('click', onCancel);
-    overlay.addEventListener('click', onCancel);
+    modal.addEventListener('click', onContainerClick);
     inputEl.addEventListener('keydown', onInputKey);
   });
 }

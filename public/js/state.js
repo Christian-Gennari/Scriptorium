@@ -21,4 +21,5 @@ export const state = {
   saveTimeout: null,
   settingsSaveTimeout: null,
   isDirty: false,
+  modalStack: 0,
 };

@@ -654,8 +654,17 @@ select:focus {
   display: none !important;
 }
 
+/* ===== Global Overlay ===== */
+#global-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  z-index: 150;
+}
+
 /* ===== Modal Variations ===== */
-#open-modal, #shortcuts-modal, #saveas-modal {
+#open-modal, #shortcuts-modal, #saveas-modal, #dialog-modal {
   position: fixed;
   inset: 0;
   z-index: 200;
@@ -663,14 +672,6 @@ select:focus {
   align-items: center;
   justify-content: center;
   animation: modal-fade-in 0.2s ease-out;
-}
-
-#open-modal .modal-backdrop, #shortcuts-modal .modal-backdrop, #saveas-modal .modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(2px);
-  z-index: -1;
 }
 
 .modal--open .modal-body {
@@ -983,23 +984,6 @@ select:focus {
 }
 
 /* ===== Dialog Modal ===== */
-#dialog-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 300;
-  backdrop-filter: blur(2px);
-}
-
-#dialog-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 301;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 #dialog-modal .modal {
   width: 380px;
 }
@@ -1298,7 +1282,7 @@ select:focus {
   #sidebar-hitbox { display: none; }
   #sidebar-backdrop { display: none; }
   #sidebar { display: none !important; }
-  #open-modal, #shortcuts-modal, #toast-container, #dialog-overlay, #dialog-modal, #floating-info, #toc-panel { display: none !important; }
+  #open-modal, #shortcuts-modal, #saveas-modal, #dialog-modal, #global-overlay, #toast-container, #floating-info, #toc-panel { display: none !important; }
   #editor-container {
     height: auto;
     overflow: visible;

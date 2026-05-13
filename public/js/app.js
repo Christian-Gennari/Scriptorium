@@ -20,12 +20,17 @@ document.getElementById('btn-menu-toggle').addEventListener('click', toggleSideb
 document.getElementById('sidebar-hitbox').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
 
-document.querySelectorAll('.btn-close-modal, #open-modal .modal-backdrop').forEach(el => {
+document.querySelectorAll('.btn-close-modal').forEach(el => {
   el.addEventListener('click', closeModal);
+});
+document.getElementById('open-modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
 });
 document.getElementById('btn-shortcuts').addEventListener('click', openShortcuts);
 document.getElementById('btn-close-shortcuts').addEventListener('click', closeShortcuts);
-document.getElementById('shortcuts-backdrop').addEventListener('click', closeShortcuts);
+document.getElementById('shortcuts-modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeShortcuts();
+});
 
 document.addEventListener('keydown', (e) => {
   const mod = e.altKey || e.metaKey;
