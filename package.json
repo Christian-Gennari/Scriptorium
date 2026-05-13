@@ -1,7 +1,7 @@
 {
   "name": "scriptorium",
   "version": "1.0.0",
-  "description": "A distraction-free, self-hosted writing environment.",
+  "description": "A calm, private place to write.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/Christian-Gennari/scriptorium.git"
   },
-  "keywords": [],
+  "keywords": ["writing", "markdown", "self-hosted", "distraction-free", "editor"],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
