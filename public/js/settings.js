@@ -12,6 +12,7 @@ const DEFAULT_SETTINGS = {
   distractionFree: false,
   spellCheck: false,
   typewriterSounds: false,
+  typewriterVolume: 0.7,
   showTableOfContents: false,
 };
 
@@ -42,6 +43,8 @@ export function applySettings(s) {
   document.getElementById('setting-distractionfree').checked = t.distractionFree ?? DEFAULT_SETTINGS.distractionFree;
   document.getElementById('setting-spellcheck').checked = t.spellCheck ?? DEFAULT_SETTINGS.spellCheck;
   document.getElementById('setting-typewriter').checked = t.typewriterSounds ?? DEFAULT_SETTINGS.typewriterSounds;
+  document.getElementById('setting-typewriter-volume').value = Math.round((t.typewriterVolume ?? DEFAULT_SETTINGS.typewriterVolume) * 100);
+  document.getElementById('setting-typewriter-volume-val').textContent = Math.round((t.typewriterVolume ?? DEFAULT_SETTINGS.typewriterVolume) * 100) + '%';
   document.getElementById('setting-toc').checked = t.showTableOfContents ?? DEFAULT_SETTINGS.showTableOfContents;
 
   document.body.classList.toggle('distraction-free', t.distractionFree ?? DEFAULT_SETTINGS.distractionFree);
@@ -138,6 +141,13 @@ document.getElementById('setting-spellcheck').addEventListener('change', (e) => 
 document.getElementById('setting-typewriter').addEventListener('change', (e) => {
   updateSetting('typewriterSounds', e.target.checked);
 });
+document.getElementById('setting-typewriter-volume').addEventListener('input', (e) => {
+  const v = Number(e.target.value) / 100;
+  document.getElementById('setting-typewriter-volume-val').textContent = e.target.value + '%';
+  state.settings.typewriterVolume = v;
+  debouncedSaveSettings();
+});
+
 document.getElementById('setting-toc').addEventListener('change', (e) => {
   updateSetting('showTableOfContents', e.target.checked);
 });

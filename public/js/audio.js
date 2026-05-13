@@ -4,7 +4,9 @@ let audioCtx = null;
 let lastSoundTime = 0;
 const buffers = {};
 
-const SAMPLES = ['keypress', 'space', 'backspace', 'bell', 'return'];
+const KEY_SOUNDS = ['keypress-1', 'keypress-2', 'keypress-3', 'keypress-4', 'keypress-5'];
+
+const ALL_SAMPLES = [...KEY_SOUNDS, 'space', 'return', 'backspace'];
 
 function getAudioContext() {
   if (!audioCtx) {
@@ -19,7 +21,7 @@ function getAudioContext() {
 async function loadSample(name) {
   try {
     const ctx = getAudioContext();
-    const res = await fetch(`audio/${name}.wav`);
+    const res = await fetch(`audio/${name}.mp3`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const arrayBuf = await res.arrayBuffer();
     buffers[name] = await ctx.decodeAudioData(arrayBuf);
@@ -30,42 +32,54 @@ async function loadSample(name) {
 
 export function preloadSamples() {
   getAudioContext();
-  SAMPLES.forEach((name) => loadSample(name));
+  ALL_SAMPLES.forEach((name) => loadSample(name));
 }
 
-function playBuffer(ctx, name, detune = 0, delay = 0) {
+function playBuffer(ctx, name, volume = 1, playbackRate = 1) {
   const buf = buffers[name];
   if (!buf) return;
-  const t = ctx.currentTime + delay;
+  const t = ctx.currentTime;
   const source = ctx.createBufferSource();
   source.buffer = buf;
-  if (detune) source.detune.value = detune;
+  source.playbackRate.value = playbackRate;
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(1, t);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + buf.duration);
+  gain.gain.value = volume;
   source.connect(gain);
   gain.connect(ctx.destination);
   source.start(t);
 }
 
-export function playTypewriterSound(action = 'keypress') {
+function rand(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+const DEFAULT_VOLUME = 0.7;
+
+export function playTypewriterSound(action = 'keypress', keyCode = 0) {
   if (!state.settings.typewriterSounds) return;
   const now = Date.now();
   if (now - lastSoundTime < 30) return;
   lastSoundTime = now;
+
+  const vol = typeof state.settings.typewriterVolume === 'number'
+    ? state.settings.typewriterVolume
+    : DEFAULT_VOLUME;
+
   const ctx = getAudioContext();
+
   switch (action) {
     case 'space':
-      playBuffer(ctx, 'space');
+      playBuffer(ctx, 'space', vol, rand(0.95, 1.05));
       break;
     case 'backspace':
-      playBuffer(ctx, 'backspace');
+      playBuffer(ctx, 'backspace', vol, rand(0.97, 1.03));
       break;
     case 'enter':
-      playBuffer(ctx, 'bell');
-      playBuffer(ctx, 'return', 0, 0.2);
+      playBuffer(ctx, 'return', vol, rand(0.99, 1.01));
       break;
-    default:
-      playBuffer(ctx, 'keypress', Math.floor(Math.random() * 60 - 30));
+    default: {
+      const idx = (keyCode || 0) % 5;
+      playBuffer(ctx, KEY_SOUNDS[idx], rand(Math.max(vol - 0.2, 0), vol), rand(0.98, 1.01));
+    }
   }
 }

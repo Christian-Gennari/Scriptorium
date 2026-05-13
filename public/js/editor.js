@@ -106,7 +106,7 @@ export function initEditor(markdownContent = '') {
         } else if (e.key === ' ') {
           playTypewriterSound('space');
         } else if (e.key.length === 1) {
-          playTypewriterSound('keypress');
+          playTypewriterSound('keypress', e.keyCode);
         }
       }
     });

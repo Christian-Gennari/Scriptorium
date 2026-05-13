@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
   distractionFree: false,
   spellCheck: false,
   typewriterSounds: false,
+  typewriterVolume: 0.7,
   showTableOfContents: false,
 };
 
@@ -143,6 +144,7 @@ const SETTINGS_TYPES = {
   distractionFree: 'boolean',
   spellCheck: 'boolean',
   typewriterSounds: 'boolean',
+  typewriterVolume: 'number',
   showTableOfContents: 'boolean',
 };
 
