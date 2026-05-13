@@ -363,6 +363,7 @@ document.getElementById('btn-open').addEventListener('click', openModal);
 document.getElementById('btn-saveas').addEventListener('click', saveAsFile);
 document.getElementById('btn-fullscreen').addEventListener('click', toggleFullscreen);
 document.getElementById('btn-print').addEventListener('click', printDocument);
+document.getElementById('btn-download').addEventListener('click', downloadCurrentFile);
 document.getElementById('btn-settings').addEventListener('click', openSettings);
 document.getElementById('btn-close-settings').addEventListener('click', closeSettings);
 document.getElementById('settings-overlay').addEventListener('click', closeSettings);
