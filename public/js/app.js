@@ -1,4 +1,4 @@
-import { state, editorEl, fileNameEl } from './state.js';
+import { state, editorEl, fileNameEl, tiptapEditor } from './state.js';
 import { API } from './api.js';
 import { showToast, setSaveStatus, updateStats, toggleSidebar, closeSidebar, toggleFullscreen, printDocument } from './ui.js';
 import { applySettings, openSettings, closeSettings, openShortcuts, closeShortcuts, toggleDistractionFree } from './settings.js';
@@ -36,6 +36,10 @@ document.addEventListener('keydown', (e) => {
   else if (mod && e.code === 'Comma') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (mod && e.shiftKey && e.code === 'KeyF') { e.preventDefault(); toggleDistractionFree(); }
+  else if (mod && e.code === 'Digit1') { e.preventDefault(); tiptapEditor?.chain().focus().toggleHeading({ level: 1 }).run(); }
+  else if (mod && e.code === 'Digit2') { e.preventDefault(); tiptapEditor?.chain().focus().toggleHeading({ level: 2 }).run(); }
+  else if (mod && e.code === 'Digit3') { e.preventDefault(); tiptapEditor?.chain().focus().toggleHeading({ level: 3 }).run(); }
+  else if (mod && e.code === 'KeyQ') { e.preventDefault(); tiptapEditor?.chain().focus().toggleBlockquote().run(); }
   else if (e.key === 'Escape') {
     if (!document.getElementById('shortcuts-modal').classList.contains('hidden')) { closeShortcuts(); return; }
     if (!document.getElementById('open-modal').classList.contains('hidden')) { closeModal(); return; }
