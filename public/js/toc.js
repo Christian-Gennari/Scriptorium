@@ -1,4 +1,4 @@
-import { tiptapEditor } from './state.js';
+import { state, tiptapEditor } from './state.js';
 
 let tocOpen = false;
 
@@ -27,7 +27,7 @@ function updateTocTrigger() {
   const trigger = document.getElementById('toc-trigger');
   if (!trigger) return;
   const headings = getHeadings();
-  trigger.classList.toggle('hidden', headings.length === 0);
+  trigger.classList.toggle('hidden', !state.settings.showTableOfContents || headings.length === 0);
 }
 
 export function updateToc() {
