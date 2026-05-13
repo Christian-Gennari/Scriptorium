@@ -5,3 +5,4 @@ node_modules/
 data/*.md
 data/settings.json
 !data/.gitkeep
+public/dist/

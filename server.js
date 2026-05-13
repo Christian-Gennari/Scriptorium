@@ -16,11 +16,8 @@ const DEFAULT_SETTINGS = {
   font: 'serif',
   fontSize: 18,
   lineSpacing: 1.6,
-  caretColor: '#333333',
-  fontColor: '#333333',
+
   distractionFree: false,
-  smartQuotes: true,
-  smartDashes: true,
   spellCheck: false,
   typewriterSounds: false,
 };
@@ -137,11 +134,8 @@ const SETTINGS_TYPES = {
   font: 'string',
   fontSize: 'number',
   lineSpacing: 'number',
-  caretColor: 'string',
-  fontColor: 'string',
+
   distractionFree: 'boolean',
-  smartQuotes: 'boolean',
-  smartDashes: 'boolean',
   spellCheck: 'boolean',
   typewriterSounds: 'boolean',
 };

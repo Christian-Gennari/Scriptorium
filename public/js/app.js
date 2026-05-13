@@ -1,10 +1,10 @@
-import { state, editor, fileNameEl } from './state.js';
+import { state, editorEl, fileNameEl } from './state.js';
 import { API } from './api.js';
 import { showToast, setSaveStatus, updateStats, toggleSidebar, closeSidebar, toggleFullscreen, printDocument } from './ui.js';
 import { applySettings, openSettings, closeSettings, openShortcuts, closeShortcuts, toggleDistractionFree } from './settings.js';
 import { newDocument, openModal, saveCurrentFile, saveAsFile, uploadLocalFile, downloadCurrentFile, closeModal } from './files.js';
-import './editor.js';
-import './audio.js';
+import { initEditor } from './editor.js';
+import { preloadSamples } from './audio.js';
 
 document.getElementById('btn-new').addEventListener('click', newDocument);
 document.getElementById('btn-open').addEventListener('click', openModal);
@@ -38,7 +38,7 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (mod && e.shiftKey && e.code === 'KeyF') { e.preventDefault(); toggleDistractionFree(); }
   else if (e.key === 'Escape' && document.getElementById('sidebar').classList.contains('open')) { closeSidebar(); }
-  else if (e.key === '?' && document.activeElement !== editor) { e.preventDefault(); openShortcuts(); }
+  else if (e.key === '?' && !document.activeElement?.closest('#editor')) { e.preventDefault(); openShortcuts(); }
   else if (mod && e.code === 'KeyM') { e.preventDefault(); toggleSidebar(); }
 });
 
@@ -51,20 +51,24 @@ async function init() {
   }
   applySettings(state.settings);
 
+  let initialContent = '';
   const saved = localStorage.getItem('calmly-current');
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      editor.value = parsed.content || '';
+      initialContent = parsed.content || '';
       if (parsed.name) {
         state.currentFile = parsed.name;
         fileNameEl.textContent = parsed.name;
         setSaveStatus('Saved', 'saved');
         document.title = `${parsed.name} \u2014 Calmly Writer`;
       }
-      updateStats();
     } catch {}
   }
+
+  initEditor(initialContent);
+  updateStats();
+  preloadSamples();
 
   window.addEventListener('beforeunload', (e) => {
     if (state.isDirty) {

@@ -1,15 +1,35 @@
-import { state, editor, fileNameEl, editorContainer } from './state.js';
+import { state, tiptapEditor, fileNameEl, editorContainer } from './state.js';
 import { API } from './api.js';
 import { showToast, showDialog, setSaveStatus, updateStats } from './ui.js';
+import { htmlToMarkdown, markdownToHtml } from './markdown.js';
 
 function sanitizeName(name) {
   const sanitized = name.replace(/[^a-zA-Z0-9._-]/g, '');
   return sanitized.toLowerCase().endsWith('.md') ? sanitized : sanitized + '.md';
 }
 
+function getMarkdown() {
+  if (!tiptapEditor) return '';
+  return htmlToMarkdown(tiptapEditor.getHTML());
+}
+
+function setContent(md) {
+  if (!tiptapEditor) return;
+  state._suppressDirty = true;
+  tiptapEditor.commands.setContent(markdownToHtml(md));
+  state._suppressDirty = false;
+}
+
+function clearContent() {
+  if (!tiptapEditor) return;
+  state._suppressDirty = true;
+  tiptapEditor.commands.clearContent();
+  state._suppressDirty = false;
+}
+
 export async function newDocument() {
   if (state.isDirty && !await showDialog({ title: 'New Document', message: 'Discard unsaved changes?' })) return;
-  editor.value = '';
+  clearContent();
   state.currentFile = null;
   fileNameEl.textContent = 'Untitled';
   document.title = 'Untitled \u2014 Calmly Writer';
@@ -31,10 +51,10 @@ export async function openFile(name) {
     showToast('File not found', 'error');
     return;
   }
-  editor.value = file.content;
   state.currentFile = name;
   fileNameEl.textContent = name;
   document.title = `${name} \u2014 Calmly Writer`;
+  setContent(file.content);
   state.isDirty = false;
   updateStats();
   setSaveStatus('Saved', 'saved');
@@ -44,12 +64,13 @@ export async function openFile(name) {
 
 export async function saveCurrentFile() {
   try {
+    const md = getMarkdown();
     if (!state.currentFile) {
       const name = await showDialog({ title: 'Save', message: 'File name:', prompt: 'untitled.md', confirmLabel: 'Save' });
       if (!name) return false;
       if (!name.toLowerCase().endsWith('.md')) state.currentFile = name + '.md';
       else state.currentFile = name;
-      const ok = await API.createFile(state.currentFile, editor.value);
+      const ok = await API.createFile(state.currentFile, md);
       if (!ok) {
         setSaveStatus('Error saving', 'error');
         showToast('Failed to save file', 'error');
@@ -58,7 +79,7 @@ export async function saveCurrentFile() {
       fileNameEl.textContent = state.currentFile;
       document.title = `${state.currentFile} \u2014 Calmly Writer`;
     } else {
-      const ok = await API.saveFile(state.currentFile, editor.value);
+      const ok = await API.saveFile(state.currentFile, md);
       if (!ok) {
         setSaveStatus('Error saving', 'error');
         showToast('Failed to save file', 'error');
@@ -67,7 +88,7 @@ export async function saveCurrentFile() {
     }
     state.isDirty = false;
     setSaveStatus('Saved', 'saved');
-    localStorage.setItem('calmly-current', JSON.stringify({ name: state.currentFile, content: editor.value }));
+    localStorage.setItem('calmly-current', JSON.stringify({ name: state.currentFile, content: md }));
     return true;
   } catch {
     setSaveStatus('Error saving', 'error');
@@ -81,13 +102,14 @@ export async function saveAsFile() {
   if (!name) return;
   const fname = name.toLowerCase().endsWith('.md') ? name : name + '.md';
   try {
+    const md = getMarkdown();
     const exists = await API.getFile(fname);
     if (exists) {
       if (!await showDialog({ title: 'Overwrite', message: `"${fname}" already exists. Overwrite?`, confirmLabel: 'Overwrite', confirmClass: 'dialog-btn-primary' })) return;
-      const ok = await API.saveFile(fname, editor.value);
+      const ok = await API.saveFile(fname, md);
       if (!ok) { showToast('Failed to save file', 'error'); return; }
     } else {
-      const ok = await API.createFile(fname, editor.value);
+      const ok = await API.createFile(fname, md);
       if (!ok) { showToast('Failed to save file', 'error'); return; }
     }
     state.currentFile = fname;
@@ -95,6 +117,7 @@ export async function saveAsFile() {
     document.title = `${fname} \u2014 Calmly Writer`;
     state.isDirty = false;
     setSaveStatus('Saved', 'saved');
+    localStorage.setItem('calmly-current', JSON.stringify({ name: fname, content: md }));
     updateStats();
   } catch {
     showToast('Connection lost. Could not save file.', 'error');
@@ -123,7 +146,7 @@ export function uploadLocalFile() {
     const file = e.target.files[0];
     if (!file) return;
     const content = await file.text();
-    editor.value = content;
+    setContent(content);
     state.currentFile = sanitizeName(file.name);
     fileNameEl.textContent = state.currentFile;
     document.title = `${state.currentFile} \u2014 Calmly Writer`;
@@ -136,7 +159,7 @@ export function uploadLocalFile() {
 }
 
 export function downloadCurrentFile() {
-  const content = editor.value;
+  const content = getMarkdown();
   const name = state.currentFile || 'untitled.md';
   const blob = new Blob([content], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
@@ -157,7 +180,7 @@ export async function confirmAndDeleteFile(name) {
     }
     showToast(`"${name}" deleted`, 'success');
     if (state.currentFile === name) {
-      editor.value = '';
+      clearContent();
       state.currentFile = null;
       fileNameEl.textContent = 'Untitled';
       document.title = 'Untitled \u2014 Calmly Writer';
@@ -243,7 +266,7 @@ editorContainer.addEventListener('drop', async (e) => {
   }
   if (state.isDirty && !await showDialog({ title: 'Drop File', message: 'Discard unsaved changes?' })) return;
   const content = await file.text();
-  editor.value = content;
+  setContent(content);
   state.currentFile = sanitizeName(file.name);
   fileNameEl.textContent = state.currentFile;
   document.title = `${state.currentFile} \u2014 Calmly Writer`;

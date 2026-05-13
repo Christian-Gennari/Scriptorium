@@ -17,18 +17,17 @@
   --text: #333333;
   --text-secondary: #999999;
   --border: #e0e0e0;
-  --caret: #333333;
   --font-stack: serif;
   --font-size: 18px;
   --line-spacing: 1.6;
   --text-width: 60ch;
 }
 
-.theme-light  { --bg: #ffffff; --bg-secondary: #f5f5f5; --text: #333333; --text-secondary: #999999; --border: #e0e0e0; }
-.theme-dark   { --bg: #1e1e1e; --bg-secondary: #252525; --text: #dddddd; --text-secondary: #777777; --border: #333333; }
-.theme-black  { --bg: #000000; --bg-secondary: #111111; --text: #aaaaaa; --text-secondary: #555555; --border: #222222; }
-.theme-sepia  { --bg: #fbf3e0; --bg-secondary: #f0e8d0; --text: #5f4b32; --text-secondary: #a09070; --border: #d8c8a8; }
-.theme-dune   { --bg: #2c2b28; --bg-secondary: #343330; --text: #bdae9d; --text-secondary: #7a7060; --border: #404040; }
+.theme-light  { --bg: #ffffff; --bg-secondary: #f5f5f5; --text: #333333; --text-secondary: #999999; --border: #e0e0e0; --caret: #333333; }
+.theme-dark   { --bg: #1e1e1e; --bg-secondary: #252525; --text: #dddddd; --text-secondary: #777777; --border: #333333; --caret: #dddddd; }
+.theme-black  { --bg: #000000; --bg-secondary: #111111; --text: #aaaaaa; --text-secondary: #555555; --border: #222222; --caret: #aaaaaa; }
+.theme-sepia  { --bg: #fbf3e0; --bg-secondary: #f0e8d0; --text: #5f4b32; --text-secondary: #a09070; --border: #d8c8a8; --caret: #5f4b32; }
+.theme-dune   { --bg: #2c2b28; --bg-secondary: #343330; --text: #bdae9d; --text-secondary: #7a7060; --border: #404040; --caret: #bdae9d; }
 
 html, body {
   height: 100%;
@@ -60,21 +59,71 @@ body {
   width: 100%;
   max-width: var(--text-width);
   height: 100%;
-  border: none;
-  outline: none;
-  resize: none;
-  padding: 48px 24px;
   font-family: var(--font-stack);
   font-size: var(--font-size);
   line-height: var(--line-spacing);
   color: var(--text);
   background: transparent;
+}
+
+#editor .ProseMirror {
+  min-height: 100%;
+  padding: 48px 24px;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
   caret-color: var(--caret);
 }
 
-#editor::placeholder {
+#editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
   color: var(--text-secondary);
   opacity: 0.5;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Bubble menu */
+.bubble-menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.bubble-menu button {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--text);
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.bubble-menu button:hover {
+  background: rgba(128,128,128,0.1);
+}
+
+.bubble-menu button.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.bubble-menu .sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 2px;
 }
 
 .drag-over {
@@ -341,7 +390,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-select, input[type="color"] {
+select {
   width: 100%;
   padding: 6px 8px;
   border: 1px solid var(--border);
@@ -350,11 +399,6 @@ select, input[type="color"] {
   color: var(--text);
   font-size: 13px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-input[type="color"] {
-  height: 36px;
-  padding: 2px 4px;
 }
 
 input[type="range"] {
@@ -500,7 +544,8 @@ input[type="checkbox"] {
   background: transparent;
 }
 
-.distraction-free #editor {
+.distraction-free #editor,
+.distraction-free #editor .ProseMirror {
   background: transparent;
 }
 
@@ -624,7 +669,7 @@ input[type="checkbox"] {
     width: calc(100% - 32px);
   }
 
-  #editor {
+  #editor .ProseMirror {
     padding: 32px 16px;
   }
 }
@@ -636,7 +681,7 @@ input[type="checkbox"] {
     padding: 4px;
   }
 
-  #editor {
+  #editor .ProseMirror {
     padding: 16px 12px;
   }
 }
@@ -656,7 +701,7 @@ input[type="checkbox"] {
     height: auto;
     overflow: visible;
   }
-  #editor {
+  #editor, #editor .ProseMirror {
     max-width: 100%;
     padding: 0;
     overflow: visible;

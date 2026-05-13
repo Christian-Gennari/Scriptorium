@@ -3,19 +3,21 @@
 ## Commands
 
 - `npm start` — starts Express server on `http://localhost:3000` (port via `PORT` env)
+- `npm run build` — bundles JS with esbuild into `public/dist/app.js`
 - No tests, no lint, no typecheck configured
 
 ## Codebase
 
 - **Single server**: `server.js` (CommonJS, Express 5)
-- **Vanilla JS SPA (ES modules)**: `public/index.html` + `styles.css` + `public/js/*.js` — no build step. Module structure:
+- **TipTap WYSIWYG SPA (ES modules → esbuild bundle)**: `public/index.html` + `styles.css` + `public/js/*.js`. Bundled via `npm run build`. Module structure:
   - `js/app.js` — entry point, keyboard shortcuts, init
   - `js/state.js` — shared mutable state + cached DOM refs
   - `js/api.js` — HTTP calls to backend
   - `js/ui.js` — toast, dialog, stats, sidebar toggle, fullscreen
   - `js/settings.js` — settings CRUD, apply, panel toggle, listeners
   - `js/files.js` — file CRUD, upload, download, file list modal, drag-and-drop
-  - `js/editor.js` — smart quotes/dashes, input/keydown listeners
+  - `js/editor.js` — TipTap init, bubble menu, keyboard shortcuts
+  - `js/markdown.js` — markdown ↔ HTML conversion (turndown + marked)
   - `js/audio.js` — typewriter sounds (AudioContext)
 - **Storage**: plain `.md` files in `data/` — user documents are gitignored
 - **Settings**: `data/settings.json` — auto-created, gitignored

@@ -37,8 +37,24 @@
 
 <div id="app">
   <div id="editor-container">
-    <textarea id="editor" placeholder="Start writing..."></textarea>
+    <div id="editor"></div>
   </div>
+</div>
+
+<div id="bubble-menu" class="bubble-menu">
+  <button data-command="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+  <button data-command="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+  <span class="sep"></span>
+  <button data-command="h1" title="Heading 1">H1</button>
+  <button data-command="h2" title="Heading 2">H2</button>
+  <span class="sep"></span>
+  <button data-command="bulletList" title="Bullet list">&bull;</button>
+  <button data-command="orderedList" title="Ordered list">1.</button>
+  <span class="sep"></span>
+  <button data-command="blockquote" title="Blockquote">&quot;</button>
+  <span class="sep"></span>
+  <button data-command="undo" title="Undo (Ctrl+Z)">&#8630;</button>
+  <button data-command="redo" title="Redo (Ctrl+Shift+Z)">&#8631;</button>
 </div>
 
 <div id="settings-overlay" class="hidden"></div>
@@ -89,29 +105,9 @@
       </div>
     </div>
     <div class="setting-group">
-      <label>Caret color</label>
-      <input type="color" id="setting-caretcolor" value="#333333">
-    </div>
-    <div class="setting-group">
-      <label>Font color</label>
-      <input type="color" id="setting-fontcolor" value="#333333">
-    </div>
-    <div class="setting-group">
       <label>
         <input type="checkbox" id="setting-distractionfree">
         Distraction-free mode
-      </label>
-    </div>
-    <div class="setting-group">
-      <label>
-        <input type="checkbox" id="setting-smartquotes" checked>
-        Smart quotes
-      </label>
-    </div>
-    <div class="setting-group">
-      <label>
-        <input type="checkbox" id="setting-smartdashes" checked>
-        Smart dashes
       </label>
     </div>
     <div class="setting-group">
@@ -191,6 +187,6 @@
   </div>
 </div>
 
-<script type="module" src="js/app.js"></script>
+<script type="module" src="dist/app.js"></script>
 </body>
 </html>

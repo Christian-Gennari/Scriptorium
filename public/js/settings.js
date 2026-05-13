@@ -1,4 +1,4 @@
-import { state, editor } from './state.js';
+import { state, editorEl } from './state.js';
 import { API } from './api.js';
 import { showToast } from './ui.js';
 
@@ -8,26 +8,26 @@ const DEFAULT_SETTINGS = {
   font: 'serif',
   fontSize: 18,
   lineSpacing: 1.6,
-  caretColor: '#333333',
-  fontColor: '#333333',
+
   distractionFree: false,
-  smartQuotes: true,
-  smartDashes: true,
   spellCheck: false,
   typewriterSounds: false,
 };
+
+function setProseMirrorSpellcheck(val) {
+  const pm = editorEl.querySelector('.ProseMirror');
+  if (pm) pm.setAttribute('spellcheck', String(val));
+}
 
 export function applySettings(s) {
   state.settings = { ...DEFAULT_SETTINGS, ...s };
 
   document.body.className = `theme-${state.settings.theme}`;
-  editor.style.maxWidth = state.settings.textWidth + 'ch';
-  editor.style.fontFamily = state.settings.font;
-  editor.style.fontSize = state.settings.fontSize + 'px';
-  editor.style.lineHeight = state.settings.lineSpacing;
-  editor.style.caretColor = state.settings.caretColor;
-  editor.style.color = state.settings.fontColor;
-  editor.spellcheck = state.settings.spellCheck;
+  editorEl.style.maxWidth = state.settings.textWidth + 'ch';
+  editorEl.style.fontFamily = state.settings.font;
+  editorEl.style.fontSize = state.settings.fontSize + 'px';
+  editorEl.style.lineHeight = state.settings.lineSpacing;
+  setProseMirrorSpellcheck(state.settings.spellCheck);
 
   document.getElementById('setting-theme').value = state.settings.theme;
   document.getElementById('setting-textwidth').value = state.settings.textWidth;
@@ -37,11 +37,7 @@ export function applySettings(s) {
   document.getElementById('setting-fontsize-val').textContent = state.settings.fontSize + 'px';
   document.getElementById('setting-linespacing').value = state.settings.lineSpacing;
   document.getElementById('setting-linespacing-val').textContent = state.settings.lineSpacing;
-  document.getElementById('setting-caretcolor').value = state.settings.caretColor;
-  document.getElementById('setting-fontcolor').value = state.settings.fontColor;
   document.getElementById('setting-distractionfree').checked = state.settings.distractionFree;
-  document.getElementById('setting-smartquotes').checked = state.settings.smartQuotes;
-  document.getElementById('setting-smartdashes').checked = state.settings.smartDashes;
   document.getElementById('setting-spellcheck').checked = state.settings.spellCheck;
   document.getElementById('setting-typewriter').checked = state.settings.typewriterSounds;
 
@@ -99,7 +95,7 @@ document.getElementById('setting-theme').addEventListener('change', (e) => {
 document.getElementById('setting-textwidth').addEventListener('input', (e) => {
   const v = e.target.value;
   document.getElementById('setting-textwidth-val').textContent = v + 'ch';
-  editor.style.maxWidth = v + 'ch';
+  editorEl.style.maxWidth = v + 'ch';
   state.settings.textWidth = Number(v);
   debouncedSaveSettings();
 });
@@ -109,39 +105,23 @@ document.getElementById('setting-font').addEventListener('change', (e) => {
 document.getElementById('setting-fontsize').addEventListener('input', (e) => {
   const v = e.target.value;
   document.getElementById('setting-fontsize-val').textContent = v + 'px';
-  editor.style.fontSize = v + 'px';
+  editorEl.style.fontSize = v + 'px';
   state.settings.fontSize = Number(v);
   debouncedSaveSettings();
 });
 document.getElementById('setting-linespacing').addEventListener('input', (e) => {
   const v = e.target.value;
   document.getElementById('setting-linespacing-val').textContent = v;
-  editor.style.lineHeight = v;
+  editorEl.style.lineHeight = v;
   state.settings.lineSpacing = Number(v);
-  debouncedSaveSettings();
-});
-document.getElementById('setting-caretcolor').addEventListener('input', (e) => {
-  editor.style.caretColor = e.target.value;
-  state.settings.caretColor = e.target.value;
-  debouncedSaveSettings();
-});
-document.getElementById('setting-fontcolor').addEventListener('input', (e) => {
-  editor.style.color = e.target.value;
-  state.settings.fontColor = e.target.value;
   debouncedSaveSettings();
 });
 document.getElementById('setting-distractionfree').addEventListener('change', (e) => {
   document.body.classList.toggle('distraction-free', e.target.checked);
   updateSetting('distractionFree', e.target.checked);
 });
-document.getElementById('setting-smartquotes').addEventListener('change', (e) => {
-  updateSetting('smartQuotes', e.target.checked);
-});
-document.getElementById('setting-smartdashes').addEventListener('change', (e) => {
-  updateSetting('smartDashes', e.target.checked);
-});
 document.getElementById('setting-spellcheck').addEventListener('change', (e) => {
-  editor.spellcheck = e.target.checked;
+  setProseMirrorSpellcheck(e.target.checked);
   updateSetting('spellCheck', e.target.checked);
 });
 document.getElementById('setting-typewriter').addEventListener('change', (e) => {

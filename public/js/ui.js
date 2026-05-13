@@ -1,4 +1,4 @@
-import { state, editor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl } from './state.js';
+import { state, tiptapEditor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl } from './state.js';
 
 export function showToast(message, type = 'error', duration = 4000) {
   const container = document.getElementById('toast-container');
@@ -88,7 +88,7 @@ export function setSaveStatus(text, type) {
 }
 
 export function updateStats() {
-  const text = editor.value;
+  const text = tiptapEditor ? tiptapEditor.state.doc.textContent : '';
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
   const chars = text.length;
   wordCountEl.textContent = `${words} Word${words !== 1 ? 's' : ''}`;

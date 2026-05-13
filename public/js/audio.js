@@ -2,6 +2,9 @@ import { state } from './state.js';
 
 let audioCtx = null;
 let lastSoundTime = 0;
+const buffers = {};
+
+const SAMPLES = ['keypress', 'space', 'backspace', 'bell', 'return'];
 
 function getAudioContext() {
   if (!audioCtx) {
@@ -13,30 +16,56 @@ function getAudioContext() {
   return audioCtx;
 }
 
-export function playTypewriterSound(isEnter = false) {
+async function loadSample(name) {
+  try {
+    const ctx = getAudioContext();
+    const res = await fetch(`audio/${name}.wav`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const arrayBuf = await res.arrayBuffer();
+    buffers[name] = await ctx.decodeAudioData(arrayBuf);
+  } catch {
+    buffers[name] = null;
+  }
+}
+
+export function preloadSamples() {
+  getAudioContext();
+  SAMPLES.forEach((name) => loadSample(name));
+}
+
+function playBuffer(ctx, name, detune = 0, delay = 0) {
+  const buf = buffers[name];
+  if (!buf) return;
+  const t = ctx.currentTime + delay;
+  const source = ctx.createBufferSource();
+  source.buffer = buf;
+  if (detune) source.detune.value = detune;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(1, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + buf.duration);
+  source.connect(gain);
+  gain.connect(ctx.destination);
+  source.start(t);
+}
+
+export function playTypewriterSound(action = 'keypress') {
   if (!state.settings.typewriterSounds) return;
   const now = Date.now();
-  if (now - lastSoundTime < 40) return;
+  if (now - lastSoundTime < 30) return;
   lastSoundTime = now;
   const ctx = getAudioContext();
-  const duration = isEnter ? 0.08 : 0.04;
-  const bufferSize = Math.floor(ctx.sampleRate * duration);
-  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < bufferSize; i++) {
-    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * (isEnter ? 0.02 : 0.008)));
+  switch (action) {
+    case 'space':
+      playBuffer(ctx, 'space');
+      break;
+    case 'backspace':
+      playBuffer(ctx, 'backspace');
+      break;
+    case 'enter':
+      playBuffer(ctx, 'bell');
+      playBuffer(ctx, 'return', 0, 0.2);
+      break;
+    default:
+      playBuffer(ctx, 'keypress', Math.floor(Math.random() * 60 - 30));
   }
-  const source = ctx.createBufferSource();
-  source.buffer = buffer;
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.25, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.value = isEnter ? 600 : 1200;
-  filter.Q.value = isEnter ? 2.0 : 1.5;
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(ctx.destination);
-  source.start();
 }
