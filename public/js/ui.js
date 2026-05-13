@@ -41,6 +41,8 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
       ? 'dialog-btn-primary'
       : (confirmClass || 'dialog-btn-primary');
 
+    modal.classList.toggle('dialog-modal--prompt', promptDefault !== undefined);
+
     overlay.classList.remove('hidden');
     modal.classList.remove('hidden');
 
@@ -49,6 +51,7 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
     }
 
     function cleanup() {
+      modal.classList.remove('dialog-modal--prompt');
       overlay.classList.add('hidden');
       modal.classList.add('hidden');
       confirmBtn.removeEventListener('click', onConfirm);
