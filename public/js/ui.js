@@ -1,4 +1,4 @@
-import { state, tiptapEditor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl, floatingSaveStatus, floatingWordCount, floatingCharCount, floatingReadingTime } from './state.js';
+import { state, tiptapEditor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl, floatingWordCount, floatingCharCount, floatingReadingTime } from './state.js';
 
 export function showToast(message, type = 'error', duration = 4000) {
   const container = document.getElementById('toast-container');
@@ -88,7 +88,7 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
 export function setSaveStatus(text, type) {
   saveStatusEl.textContent = text;
   saveStatusEl.className = type ? `save-status--${type}` : '';
-  if (floatingSaveStatus) floatingSaveStatus.textContent = text;
+
 }
 
 export function updateStats() {

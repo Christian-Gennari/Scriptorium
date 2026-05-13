@@ -5,7 +5,6 @@ export const charCountEl = document.getElementById('char-count');
 export const readingTimeEl = document.getElementById('reading-time');
 export const saveStatusEl = document.getElementById('save-status');
 export const editorContainer = document.getElementById('editor-container');
-export const floatingSaveStatus = document.getElementById('floating-save-status');
 export const floatingWordCount = document.getElementById('floating-word-count');
 export const floatingCharCount = document.getElementById('floating-char-count');
 export const floatingReadingTime = document.getElementById('floating-reading-time');
