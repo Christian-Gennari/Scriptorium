@@ -165,13 +165,13 @@ function updateStats() {
   const text = editor.value;
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
   const chars = text.length;
-  const readingTimeMins = words === 0 ? 0 : Math.ceil(words / 270);
-
   wordCountEl.textContent = `${words} Word${words !== 1 ? 's' : ''}`;
   charCountEl.textContent = `${chars} Character${chars !== 1 ? 's' : ''}`;
-  const mins = Math.floor(readingTimeMins / 60);
-  const secs = readingTimeMins % 60;
-  readingTimeEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}:00 Reading Time`;
+
+  const readingTimeSecs = words === 0 ? 0 : Math.ceil((words / 270) * 60);
+  const mins = Math.floor(readingTimeSecs / 60);
+  const secs = readingTimeSecs % 60;
+  readingTimeEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')} Reading Time`;
 }
 
 editor.addEventListener('input', () => {
