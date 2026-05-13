@@ -1,4 +1,4 @@
-# Orison Writer — Project Plan
+# Scriptorium — Project Plan
 
 ## Goal
 
@@ -53,7 +53,7 @@ A self-hosted, open-source clone of [CalmlyWriter.com/online](https://www.calmly
 ## Project Structure
 
 ```
-orison-writer/
+scriptorium/
 ├── server.js              # Express entry point
 ├── package.json
 ├── PLAN.md                # This file
@@ -204,7 +204,7 @@ Each theme is a CSS class on `<body>` using custom properties:
 ### Simple (no container)
 ```bash
 git clone <repo>
-cd orison-writer
+cd scriptorium
 npm install
 node server.js
 # -> http://localhost:3000
@@ -213,7 +213,7 @@ node server.js
 ### Docker
 ```yaml
 services:
-  orison-writer:
+  scriptorium:
     build: .
     ports:
       - "3000:3000"

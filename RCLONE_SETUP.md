@@ -54,7 +54,7 @@ rclone copy ./data/documents Mega:CalmlyBackup
 ```bash
 crontab -e
 # Add this line to run every 4 hours:
-0 */4 * * * rclone copy /path/to/orison-writer/data/documents Mega:CalmlyBackup
+0 */4 * * * rclone copy /path/to/scriptorium/data/documents Mega:CalmlyBackup
 ```
 
 ## Monthly Cleanup (Delete Remotely-Deleted Files)
@@ -97,7 +97,7 @@ If running via Docker, the documents are in a named volume. Back up from the **h
 # docker-compose.yml
 services:
   app:
-    image: orison-writer
+    image: scriptorium
     volumes:
       - ./data:/app/data   # ← bind mount, easy to rclone from host
 

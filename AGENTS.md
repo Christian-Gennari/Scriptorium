@@ -1,4 +1,4 @@
-# AGENTS.md — Orison Writer
+# AGENTS.md — Scriptorium
 
 ## Commands
 

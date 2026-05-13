@@ -1,5 +1,5 @@
 {
-  "name": "orison-writer",
+  "name": "scriptorium",
   "version": "1.0.0",
   "description": "A distraction-free, self-hosted writing environment.",
   "main": "server.js",
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Christian-Gennari/orison-writer.git"
+    "url": "git+https://github.com/Christian-Gennari/scriptorium.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/Christian-Gennari/orison-writer/issues"
+    "url": "https://github.com/Christian-Gennari/scriptorium/issues"
   },
-  "homepage": "https://github.com/Christian-Gennari/orison-writer#readme",
+  "homepage": "https://github.com/Christian-Gennari/scriptorium#readme",
   "dependencies": {
     "@tiptap/core": "^3.23.2",
     "@tiptap/extension-bubble-menu": "^3.23.2",

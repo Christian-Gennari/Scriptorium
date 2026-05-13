@@ -1,4 +1,4 @@
-# Orison Writer
+# Scriptorium
 
 A distraction-free, self-hosted writing environment.
 
