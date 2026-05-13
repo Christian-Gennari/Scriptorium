@@ -34,7 +34,6 @@ document.addEventListener('keydown', (e) => {
   else if (mod && e.shiftKey && e.code === 'KeyS') { e.preventDefault(); saveAsFile().catch(console.error); }
   else if (mod && e.code === 'KeyS') { e.preventDefault(); saveCurrentFile().catch(console.error); }
   else if (mod && e.code === 'KeyP') { e.preventDefault(); printDocument(); }
-  else if (mod && e.code === 'Comma') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (mod && e.shiftKey && e.code === 'KeyF') { e.preventDefault(); toggleDistractionFree(); }
   else if (mod && e.code === 'Digit1') { e.preventDefault(); tiptapEditor?.chain().focus().toggleHeading({ level: 1 }).run(); }
