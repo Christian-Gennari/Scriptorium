@@ -8,10 +8,17 @@ const turndownService = new TurndownService({
   emDelimiter: '*',
 });
 
+function sanitizeHtml(html) {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(/href=(?:"|')\s*javascript\s*:/gi, "href=''");
+}
+
 export function htmlToMarkdown(html) {
   return turndownService.turndown(html);
 }
 
 export function markdownToHtml(md) {
-  return marked.parse(md);
+  return sanitizeHtml(marked.parse(md));
 }

@@ -54,6 +54,16 @@ export function initEditor(markdownContent = '') {
       updateStats();
     },
     editorProps: {
+      handleKeyDown: (view, event) => {
+        if (event.key === 'Tab') {
+          if (editor.isActive('bulletList') || editor.isActive('orderedList')) {
+            return false;
+          }
+          event.preventDefault();
+          return true;
+        }
+        return false;
+      },
       attributes: {
         spellcheck: String(state.settings.spellCheck ?? false),
       },

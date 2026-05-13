@@ -21,27 +21,28 @@ function setProseMirrorSpellcheck(val) {
 
 export function applySettings(s) {
   state.settings = { ...DEFAULT_SETTINGS, ...s };
+  const t = state.settings;
 
-  document.body.className = `theme-${state.settings.theme}`;
-  editorEl.style.maxWidth = state.settings.textWidth + 'ch';
-  editorEl.style.fontFamily = state.settings.font;
-  editorEl.style.fontSize = state.settings.fontSize + 'px';
-  editorEl.style.lineHeight = state.settings.lineSpacing;
-  setProseMirrorSpellcheck(state.settings.spellCheck);
+  document.body.className = `theme-${t.theme ?? DEFAULT_SETTINGS.theme}`;
+  editorEl.style.maxWidth = (t.textWidth ?? DEFAULT_SETTINGS.textWidth) + 'ch';
+  editorEl.style.fontFamily = t.font ?? DEFAULT_SETTINGS.font;
+  editorEl.style.fontSize = (t.fontSize ?? DEFAULT_SETTINGS.fontSize) + 'px';
+  editorEl.style.lineHeight = t.lineSpacing ?? DEFAULT_SETTINGS.lineSpacing;
+  setProseMirrorSpellcheck(t.spellCheck ?? DEFAULT_SETTINGS.spellCheck);
 
-  document.getElementById('setting-theme').value = state.settings.theme;
-  document.getElementById('setting-textwidth').value = state.settings.textWidth;
-  document.getElementById('setting-textwidth-val').textContent = state.settings.textWidth + 'ch';
-  document.getElementById('setting-font').value = state.settings.font;
-  document.getElementById('setting-fontsize').value = state.settings.fontSize;
-  document.getElementById('setting-fontsize-val').textContent = state.settings.fontSize + 'px';
-  document.getElementById('setting-linespacing').value = state.settings.lineSpacing;
-  document.getElementById('setting-linespacing-val').textContent = state.settings.lineSpacing;
-  document.getElementById('setting-distractionfree').checked = state.settings.distractionFree;
-  document.getElementById('setting-spellcheck').checked = state.settings.spellCheck;
-  document.getElementById('setting-typewriter').checked = state.settings.typewriterSounds;
+  document.getElementById('setting-theme').value = t.theme ?? DEFAULT_SETTINGS.theme;
+  document.getElementById('setting-textwidth').value = t.textWidth ?? DEFAULT_SETTINGS.textWidth;
+  document.getElementById('setting-textwidth-val').textContent = (t.textWidth ?? DEFAULT_SETTINGS.textWidth) + 'ch';
+  document.getElementById('setting-font').value = t.font ?? DEFAULT_SETTINGS.font;
+  document.getElementById('setting-fontsize').value = t.fontSize ?? DEFAULT_SETTINGS.fontSize;
+  document.getElementById('setting-fontsize-val').textContent = (t.fontSize ?? DEFAULT_SETTINGS.fontSize) + 'px';
+  document.getElementById('setting-linespacing').value = t.lineSpacing ?? DEFAULT_SETTINGS.lineSpacing;
+  document.getElementById('setting-linespacing-val').textContent = t.lineSpacing ?? DEFAULT_SETTINGS.lineSpacing;
+  document.getElementById('setting-distractionfree').checked = t.distractionFree ?? DEFAULT_SETTINGS.distractionFree;
+  document.getElementById('setting-spellcheck').checked = t.spellCheck ?? DEFAULT_SETTINGS.spellCheck;
+  document.getElementById('setting-typewriter').checked = t.typewriterSounds ?? DEFAULT_SETTINGS.typewriterSounds;
 
-  document.body.classList.toggle('distraction-free', state.settings.distractionFree);
+  document.body.classList.toggle('distraction-free', t.distractionFree ?? DEFAULT_SETTINGS.distractionFree);
 }
 
 export function openSettings() {
