@@ -8,7 +8,15 @@
 ## Codebase
 
 - **Single server**: `server.js` (CommonJS, Express 5)
-- **Vanilla JS SPA**: `public/index.html` + `styles.css` + `app.js` — no build step
+- **Vanilla JS SPA (ES modules)**: `public/index.html` + `styles.css` + `public/js/*.js` — no build step. Module structure:
+  - `js/app.js` — entry point, keyboard shortcuts, init
+  - `js/state.js` — shared mutable state + cached DOM refs
+  - `js/api.js` — HTTP calls to backend
+  - `js/ui.js` — toast, dialog, stats, sidebar toggle, fullscreen
+  - `js/settings.js` — settings CRUD, apply, panel toggle, listeners
+  - `js/files.js` — file CRUD, upload, download, file list modal, drag-and-drop
+  - `js/editor.js` — smart quotes/dashes, input/keydown listeners
+  - `js/audio.js` — typewriter sounds (AudioContext)
 - **Storage**: plain `.md` files in `data/` — user documents are gitignored
 - **Settings**: `data/settings.json` — auto-created, gitignored
 
