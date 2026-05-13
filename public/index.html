@@ -7,7 +7,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&family=Special+Elite&family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Literata:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Alegreya:ital,wght@0,400;0,600;0,700;0,800;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="theme-study">
@@ -58,14 +58,32 @@
       <div class="setting-group">
         <label>Font</label>
         <select id="setting-font">
-          <option value="'Crimson Pro', Georgia, serif">Crimson Pro</option>
-          <option value="'DM Sans', sans-serif">DM Sans</option>
-          <option value="Georgia, serif">Georgia</option>
-          <option value="serif">Serif</option>
-          <option value="sans-serif">Sans-serif</option>
-          <option value="monospace">Monospace</option>
-          <option value="'OpenDyslexic', serif">OpenDyslexic</option>
-          <option value="'Special Elite', serif">Special Elite</option>
+          <optgroup label="Classic Serif">
+            <option value="'EB Garamond', serif">EB Garamond</option>
+            <option value="'PT Serif', serif">PT Serif</option>
+            <option value="'Libre Baskerville', Georgia, serif">Libre Baskerville</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="serif">Serif</option>
+          </optgroup>
+          <optgroup label="Contemporary Serif">
+            <option value="'Crimson Pro', Georgia, serif">Crimson Pro</option>
+            <option value="'Literata', Georgia, serif">Literata</option>
+            <option value="'Source Serif 4', Georgia, serif">Source Serif 4</option>
+            <option value="'Lora', Georgia, serif">Lora</option>
+            <option value="'Alegreya', Georgia, serif">Alegreya</option>
+          </optgroup>
+          <optgroup label="Sans-serif">
+            <option value="'DM Sans', sans-serif">DM Sans</option>
+            <option value="'Inter', sans-serif">Inter</option>
+            <option value="sans-serif">Sans-serif</option>
+          </optgroup>
+          <optgroup label="Typewriter">
+            <option value="'Special Elite', serif">Special Elite</option>
+            <option value="monospace">Monospace</option>
+          </optgroup>
+          <optgroup label="Accessibility">
+            <option value="'OpenDyslexic', serif">OpenDyslexic</option>
+          </optgroup>
         </select>
       </div>
       <div class="setting-group">
