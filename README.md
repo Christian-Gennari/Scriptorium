@@ -1,2 +1,7 @@
 # CalmlyWriterClone
-Just a clone of a writing program I like, but since it is closed source I am replicating it and selfhosting it, so that I may access my writing studio environment with VPN from anywhere.
+
+A self-hosted clone of Calmly Writer — a distraction-free writing environment.
+
+## Backup
+
+See [RCLONE_SETUP.md](./RCLONE_SETUP.md) for recommended automated backups to MEGA.nz or any cloud provider.
