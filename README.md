@@ -48,7 +48,3 @@ services:
 
 See [RCLONE_SETUP.md](./RCLONE_SETUP.md) for automated backups to any
 cloud provider.
-
----
-
-MIT
