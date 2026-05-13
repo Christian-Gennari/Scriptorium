@@ -17,8 +17,6 @@ const COMMAND_MAP = {
   bulletList: (chain) => chain.toggleBulletList(),
   orderedList: (chain) => chain.toggleOrderedList(),
   blockquote: (chain) => chain.toggleBlockquote(),
-  undo: (chain) => chain.undo(),
-  redo: (chain) => chain.redo(),
 };
 
 const ACTIVE_CHECKS = {
