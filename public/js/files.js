@@ -274,3 +274,62 @@ editorContainer.addEventListener('drop', async (e) => {
   updateStats();
   setSaveStatus('Unsaved', 'unsaved');
 });
+
+let renameInput = null;
+
+export function initiateRename() {
+  if (renameInput) return;
+  const currentName = state.currentFile;
+  if (!currentName) { saveAsFile(); return; }
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'rename-input';
+  input.value = currentName.replace(/\.md$/i, '');
+  fileNameEl.style.display = 'none';
+  fileNameEl.parentNode.insertBefore(input, fileNameEl.nextSibling);
+  renameInput = input;
+  input.focus();
+  input.select();
+
+  async function commit() {
+    if (!renameInput) return;
+    const el = renameInput;
+    renameInput = null;
+    let newName = el.value.trim();
+    el.remove();
+    fileNameEl.style.display = '';
+    if (!newName || newName === currentName.replace(/\.md$/i, '')) return;
+    if (!newName.toLowerCase().endsWith('.md')) newName += '.md';
+    if (newName === currentName) return;
+
+    try {
+      const md = getMarkdown();
+      const created = await API.createFile(newName, md);
+      if (!created) { showToast('Could not create file', 'error'); return; }
+      await API.deleteFile(currentName);
+      state.currentFile = newName;
+      fileNameEl.textContent = newName;
+      document.title = `${newName} \u2014 Calmly Writer`;
+      setSaveStatus('Saved', 'saved');
+      showToast(`Renamed to "${newName}"`, 'success');
+    } catch {
+      showToast('Rename failed', 'error');
+    }
+  }
+
+  function cancel() {
+    if (!renameInput) return;
+    renameInput.remove();
+    renameInput = null;
+    fileNameEl.style.display = '';
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    else if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+  });
+  input.addEventListener('blur', commit);
+}
+
+fileNameEl.addEventListener('click', initiateRename);
