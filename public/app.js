@@ -256,6 +256,30 @@ function downloadCurrentFile() {
   setTimeout(() => URL.revokeObjectURL(url), 100);
 }
 
+async function confirmAndDeleteFile(name) {
+  if (!confirm(`Delete "${name}" permanently?`)) return;
+  try {
+    const ok = await API.deleteFile(name);
+    if (!ok) {
+      showToast('Failed to delete file', 'error');
+      return;
+    }
+    showToast(`"${name}" deleted`, 'success');
+    if (currentFile === name) {
+      editor.value = '';
+      currentFile = null;
+      fileNameEl.textContent = 'Untitled';
+      isDirty = false;
+      saveStatusEl.textContent = '';
+      updateStats();
+      localStorage.removeItem('calmly-current');
+    }
+    populateFileList();
+  } catch {
+    showToast('Connection lost. Could not delete file.', 'error');
+  }
+}
+
 async function populateFileList() {
   const list = document.getElementById('file-list');
   list.innerHTML = '<li style="padding:16px;color:var(--text-secondary)">Loading...</li>';
@@ -268,11 +292,22 @@ async function populateFileList() {
     }
     files.forEach(f => {
       const li = document.createElement('li');
+      li.className = 'file-item';
       li.innerHTML = `
-        <span>${f.name}</span>
-        <span class="file-date">${new Date(f.modified).toLocaleDateString()}</span>
+        <span class="file-item-name">${f.name}</span>
+        <span class="file-item-right">
+          <span class="file-date">${new Date(f.modified).toLocaleDateString()}</span>
+          <button class="btn-delete-file" data-name="${f.name}" title="Delete ${f.name}">&times;</button>
+        </span>
       `;
-      li.addEventListener('click', () => openFile(f.name));
+      li.querySelector('.file-item-name').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openFile(f.name);
+      });
+      li.querySelector('.btn-delete-file').addEventListener('click', (e) => {
+        e.stopPropagation();
+        confirmAndDeleteFile(f.name);
+      });
       list.appendChild(li);
     });
   } catch {
@@ -482,12 +517,12 @@ document.getElementById('shortcuts-backdrop').addEventListener('click', closeSho
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
   const ctrl = e.ctrlKey || e.metaKey;
-  if (ctrl && e.key === 'n') { e.preventDefault(); newDocument(); }
-  else if (ctrl && e.key === 'o') { e.preventDefault(); openModal(); }
+  if (ctrl && e.shiftKey && e.key === 'N') { e.preventDefault(); newDocument(); }
+  else if (ctrl && e.shiftKey && e.key === 'O') { e.preventDefault(); openModal(); }
   else if (ctrl && e.key === 's' && e.shiftKey) { e.preventDefault(); saveAsFile().catch(console.error); }
   else if (ctrl && e.key === 's') { e.preventDefault(); saveCurrentFile().catch(console.error); }
-  else if (ctrl && e.key === 'p') { e.preventDefault(); printDocument(); }
-  else if (ctrl && e.key === ',') { e.preventDefault(); openSettings(); }
+  else if (ctrl && e.shiftKey && e.key === 'P') { e.preventDefault(); printDocument(); }
+  else if (ctrl && e.shiftKey && e.key === '<') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (ctrl && e.shiftKey && e.key === 'F') { e.preventDefault(); toggleDistractionFree(); }
   else if (e.key === '?' && document.activeElement !== editor) { e.preventDefault(); openShortcuts(); }
