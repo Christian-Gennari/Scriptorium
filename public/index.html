@@ -10,35 +10,34 @@
 
 <div id="toast-container"></div>
 
-<div id="app">
-  <div id="toolbar">
-    <div class="toolbar-left">
-      <button id="btn-new" title="New document (Alt+N)">New</button>
-      <button id="btn-open" title="Open file (Alt+O)">Open</button>
-      <button id="btn-saveas" title="Save As (Alt+Shift+S)">Save As</button>
-      <button id="btn-fullscreen" title="Full screen (F11)">Full screen</button>
-      <button id="btn-print" title="Print (Alt+P)">Print</button>
-      <button id="btn-download" title="Download as .md">Download</button>
-    </div>
-    <div class="toolbar-right">
-      <span id="file-name" class="file-name">Untitled</span>
-      <button id="btn-settings" title="Settings (Alt+,)">Settings</button>
-    </div>
+<button id="btn-menu-toggle" class="menu-toggle" title="Menu (Alt+M)">&#9776;</button>
+<div id="sidebar-hitbox" title="Open menu"></div>
+<div id="sidebar-backdrop"></div>
+<div id="sidebar">
+  <div class="sidebar-header">
+    <span id="file-name" class="file-name">Untitled</span>
   </div>
+  <div class="sidebar-menu">
+    <button id="btn-new" class="sidebar-btn" title="New document (Alt+N)">New</button>
+    <button id="btn-open" class="sidebar-btn" title="Open file (Alt+O)">Open</button>
+    <button id="btn-saveas" class="sidebar-btn" title="Save As (Alt+Shift+S)">Save As</button>
+    <hr>
+    <button id="btn-download" class="sidebar-btn" title="Download as .md">Download</button>
+    <button id="btn-print" class="sidebar-btn" title="Print (Alt+P)">Print</button>
+    <button id="btn-fullscreen" class="sidebar-btn" title="Full screen (F11)">Fullscreen</button>
+    <button id="btn-settings" class="sidebar-btn" title="Settings (Alt+,)">Settings</button>
+  </div>
+  <div class="sidebar-footer">
+    <div id="save-status"></div>
+    <div id="word-count">0 Words</div>
+    <div id="char-count">0 Characters</div>
+    <div id="reading-time">00:00 Reading Time</div>
+  </div>
+</div>
 
+<div id="app">
   <div id="editor-container">
     <textarea id="editor" placeholder="Start writing..."></textarea>
-  </div>
-
-  <div id="statusbar">
-    <div class="status-left">
-      <span id="word-count">0 Words</span>
-      <span id="char-count">0 Characters</span>
-      <span id="reading-time">00:00:00 Reading Time</span>
-    </div>
-    <div class="status-right">
-      <span id="save-status"></span>
-    </div>
   </div>
 </div>
 

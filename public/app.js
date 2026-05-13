@@ -348,6 +348,20 @@ function toggleFullscreen() {
   }
 }
 
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const isOpen = sidebar.classList.toggle('open');
+  backdrop.classList.toggle('open', isOpen);
+  document.getElementById('btn-menu-toggle').textContent = isOpen ? '\u2715' : '\u2630';
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('open');
+  document.getElementById('btn-menu-toggle').textContent = '\u2630';
+}
+
 function printDocument() {
   window.print();
 }
@@ -642,6 +656,11 @@ document.getElementById('btn-close-settings').addEventListener('click', closeSet
 document.getElementById('settings-overlay').addEventListener('click', closeSettings);
 document.getElementById('btn-upload-file').addEventListener('click', uploadLocalFile);
 
+// Sidebar
+document.getElementById('btn-menu-toggle').addEventListener('click', toggleSidebar);
+document.getElementById('sidebar-hitbox').addEventListener('click', toggleSidebar);
+document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
+
 // Modal close buttons
 document.querySelectorAll('.btn-close-modal, #open-modal .modal-backdrop').forEach(el => {
   el.addEventListener('click', closeModal);
@@ -692,7 +711,9 @@ document.addEventListener('keydown', (e) => {
   else if (mod && e.code === 'Comma') { e.preventDefault(); openSettings(); }
   else if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
   else if (mod && e.shiftKey && e.code === 'KeyF') { e.preventDefault(); toggleDistractionFree(); }
+  else if (e.key === 'Escape' && document.getElementById('sidebar').classList.contains('open')) { closeSidebar(); }
   else if (e.key === '?' && document.activeElement !== editor) { e.preventDefault(); openShortcuts(); }
+  else if (mod && e.code === 'KeyM') { e.preventDefault(); toggleSidebar(); }
 });
 
 function toggleDistractionFree() {
