@@ -1,4 +1,4 @@
-import { state, tiptapEditor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl } from './state.js';
+import { state, tiptapEditor, wordCountEl, charCountEl, readingTimeEl, saveStatusEl, floatingSaveStatus, floatingWordCount, floatingCharCount, floatingReadingTime } from './state.js';
 
 export function showToast(message, type = 'error', duration = 4000) {
   const container = document.getElementById('toast-container');
@@ -85,33 +85,46 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
 export function setSaveStatus(text, type) {
   saveStatusEl.textContent = text;
   saveStatusEl.className = type ? `save-status--${type}` : '';
+  if (floatingSaveStatus) floatingSaveStatus.textContent = text;
 }
 
 export function updateStats() {
   const text = tiptapEditor ? tiptapEditor.state.doc.textContent : '';
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
   const chars = text.length;
-  wordCountEl.textContent = `${words} Word${words !== 1 ? 's' : ''}`;
-  charCountEl.textContent = `${chars} Character${chars !== 1 ? 's' : ''}`;
+  const wordStr = `${words} Word${words !== 1 ? 's' : ''}`;
+  const charStr = `${chars} Character${chars !== 1 ? 's' : ''}`;
+  wordCountEl.textContent = wordStr;
+  charCountEl.textContent = charStr;
+  if (floatingWordCount) floatingWordCount.textContent = wordStr;
+  if (floatingCharCount) floatingCharCount.textContent = charStr;
 
   const readingTimeSecs = words === 0 ? 0 : Math.ceil((words / 270) * 60);
   const mins = Math.floor(readingTimeSecs / 60);
   const secs = readingTimeSecs % 60;
-  readingTimeEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')} Reading Time`;
+  const readingStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')} Reading Time`;
+  readingTimeEl.textContent = readingStr;
+  if (floatingReadingTime) floatingReadingTime.textContent = readingStr;
 }
 
 export function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebar-backdrop');
+  const btn = document.getElementById('btn-menu-toggle');
   const isOpen = sidebar.classList.toggle('open');
   backdrop.classList.toggle('open', isOpen);
-  document.getElementById('btn-menu-toggle').textContent = isOpen ? '\u2715' : '\u2630';
+  btn.textContent = isOpen ? '\u2715' : '\u2630';
+  btn.classList.toggle('sidebar-open', isOpen);
 }
 
 export function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebar-backdrop').classList.remove('open');
-  document.getElementById('btn-menu-toggle').textContent = '\u2630';
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebar-backdrop');
+  const btn = document.getElementById('btn-menu-toggle');
+  sidebar.classList.remove('open', 'show-settings');
+  backdrop.classList.remove('open');
+  btn.textContent = '\u2630';
+  btn.classList.remove('sidebar-open');
 }
 
 export function toggleFullscreen() {
