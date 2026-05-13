@@ -198,7 +198,42 @@ function updateStats() {
   readingTimeEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')} Reading Time`;
 }
 
+function applySmartQuotes(textarea) {
+  const pos = textarea.selectionStart;
+  const val = textarea.value;
+  if (pos < 1) return false;
+
+  const prevChar = val[pos - 1];
+
+  if (settings.smartQuotes) {
+    if (prevChar === '"') {
+      const beforePrev = pos >= 2 ? val[pos - 2] : ' ';
+      const isOpen = /\s[\(\[{]/.test(beforePrev) || pos === 1;
+      const replacement = isOpen ? '\u201C' : '\u201D';
+      textarea.setRangeText(replacement, pos - 1, pos, 'end');
+      return true;
+    }
+    if (prevChar === "'") {
+      const beforePrev = pos >= 2 ? val[pos - 2] : ' ';
+      const isOpen = /\s[\(\[{]/.test(beforePrev) || pos === 1;
+      const replacement = isOpen ? '\u2018' : '\u2019';
+      textarea.setRangeText(replacement, pos - 1, pos, 'end');
+      return true;
+    }
+  }
+
+  if (settings.smartDashes) {
+    if (pos >= 2 && val[pos - 2] === '-' && val[pos - 1] === '-') {
+      textarea.setRangeText('\u2014', pos - 2, pos, 'end');
+      return true;
+    }
+  }
+
+  return false;
+}
+
 editor.addEventListener('input', () => {
+  applySmartQuotes(editor);
   updateStats();
   triggerAutoSave();
 });
