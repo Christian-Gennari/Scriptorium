@@ -208,14 +208,14 @@ function applySmartQuotes(textarea) {
   if (settings.smartQuotes) {
     if (prevChar === '"') {
       const beforePrev = pos >= 2 ? val[pos - 2] : ' ';
-      const isOpen = /\s[\(\[{]/.test(beforePrev) || pos === 1;
+      const isOpen = /[\s({[]/.test(beforePrev) || pos === 1;
       const replacement = isOpen ? '\u201C' : '\u201D';
       textarea.setRangeText(replacement, pos - 1, pos, 'end');
       return true;
     }
     if (prevChar === "'") {
       const beforePrev = pos >= 2 ? val[pos - 2] : ' ';
-      const isOpen = /\s[\(\[{]/.test(beforePrev) || pos === 1;
+      const isOpen = /[\s({[]/.test(beforePrev) || pos === 1;
       const replacement = isOpen ? '\u2018' : '\u2019';
       textarea.setRangeText(replacement, pos - 1, pos, 'end');
       return true;
@@ -307,6 +307,7 @@ function showDialog({ title, message, prompt: promptDefault, confirmLabel, confi
       confirmBtn.removeEventListener('click', onConfirm);
       cancelBtn.removeEventListener('click', onCancel);
       closeBtn.removeEventListener('click', onCancel);
+      overlay.removeEventListener('click', onCancel);
       inputEl.removeEventListener('keydown', onInputKey);
     }
 
@@ -329,6 +330,7 @@ function showDialog({ title, message, prompt: promptDefault, confirmLabel, confi
     confirmBtn.addEventListener('click', onConfirm);
     cancelBtn.addEventListener('click', onCancel);
     closeBtn.addEventListener('click', onCancel);
+    overlay.addEventListener('click', onCancel);
     inputEl.addEventListener('keydown', onInputKey);
   });
 }
@@ -505,32 +507,32 @@ function playTypewriterSound(isEnter = false) {
 function applySettings(s) {
   settings = { ...DEFAULT_SETTINGS, ...s };
 
-  document.body.className = `theme-${s.theme}`;
-  editor.style.maxWidth = s.textWidth + 'ch';
-  editor.style.fontFamily = s.font;
-  editor.style.fontSize = s.fontSize + 'px';
-  editor.style.lineHeight = s.lineSpacing;
-  editor.style.caretColor = s.caretColor;
-  editor.style.color = s.fontColor;
-  editor.spellcheck = s.spellCheck;
+  document.body.className = `theme-${settings.theme}`;
+  editor.style.maxWidth = settings.textWidth + 'ch';
+  editor.style.fontFamily = settings.font;
+  editor.style.fontSize = settings.fontSize + 'px';
+  editor.style.lineHeight = settings.lineSpacing;
+  editor.style.caretColor = settings.caretColor;
+  editor.style.color = settings.fontColor;
+  editor.spellcheck = settings.spellCheck;
 
-  document.getElementById('setting-theme').value = s.theme;
-  document.getElementById('setting-textwidth').value = s.textWidth;
-  document.getElementById('setting-textwidth-val').textContent = s.textWidth + 'ch';
-  document.getElementById('setting-font').value = s.font;
-  document.getElementById('setting-fontsize').value = s.fontSize;
-  document.getElementById('setting-fontsize-val').textContent = s.fontSize + 'px';
-  document.getElementById('setting-linespacing').value = s.lineSpacing;
-  document.getElementById('setting-linespacing-val').textContent = s.lineSpacing;
-  document.getElementById('setting-caretcolor').value = s.caretColor;
-  document.getElementById('setting-fontcolor').value = s.fontColor;
-  document.getElementById('setting-distractionfree').checked = s.distractionFree;
-  document.getElementById('setting-smartquotes').checked = s.smartQuotes;
-  document.getElementById('setting-smartdashes').checked = s.smartDashes;
-  document.getElementById('setting-spellcheck').checked = s.spellCheck;
-  document.getElementById('setting-typewriter').checked = s.typewriterSounds;
+  document.getElementById('setting-theme').value = settings.theme;
+  document.getElementById('setting-textwidth').value = settings.textWidth;
+  document.getElementById('setting-textwidth-val').textContent = settings.textWidth + 'ch';
+  document.getElementById('setting-font').value = settings.font;
+  document.getElementById('setting-fontsize').value = settings.fontSize;
+  document.getElementById('setting-fontsize-val').textContent = settings.fontSize + 'px';
+  document.getElementById('setting-linespacing').value = settings.lineSpacing;
+  document.getElementById('setting-linespacing-val').textContent = settings.lineSpacing;
+  document.getElementById('setting-caretcolor').value = settings.caretColor;
+  document.getElementById('setting-fontcolor').value = settings.fontColor;
+  document.getElementById('setting-distractionfree').checked = settings.distractionFree;
+  document.getElementById('setting-smartquotes').checked = settings.smartQuotes;
+  document.getElementById('setting-smartdashes').checked = settings.smartDashes;
+  document.getElementById('setting-spellcheck').checked = settings.spellCheck;
+  document.getElementById('setting-typewriter').checked = settings.typewriterSounds;
 
-  document.body.classList.toggle('distraction-free', s.distractionFree);
+  document.body.classList.toggle('distraction-free', settings.distractionFree);
 }
 
 function openSettings() {
@@ -668,6 +670,7 @@ editorContainer.addEventListener('drop', async (e) => {
     showToast('Unsupported file type. Use .md, .txt, .html, or .htm', 'error');
     return;
   }
+  if (isDirty && !await showDialog({ title: 'Drop File', message: 'Discard unsaved changes?' })) return;
   const content = await file.text();
   editor.value = content;
   currentFile = sanitizeName(file.name);

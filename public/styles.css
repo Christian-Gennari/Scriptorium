@@ -156,19 +156,19 @@ body {
   color: var(--text-secondary);
 }
 
-.save-status--saved {
+#save-status.save-status--saved {
   color: #388e3c;
 }
 
-.save-status--saving {
+#save-status.save-status--saving {
   color: #f57c00;
 }
 
-.save-status--unsaved {
+#save-status.save-status--unsaved {
   color: #d32f2f;
 }
 
-.save-status--error {
+#save-status.save-status--error {
   color: #d32f2f;
 }
 
