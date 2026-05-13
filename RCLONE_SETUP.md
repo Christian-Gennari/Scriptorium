@@ -49,7 +49,7 @@ You should see a list of the files in the root of your MEGA account (or an empty
 ```bash
 # Copies new/changed files from the local documents folder to the remote.
 # Existing remote files are never deleted.
- rclone copy ./data/documents Mega:ScriptoriumBackup
+rclone copy ./data/documents Mega:ScriptoriumBackup
 ```
 - `./data/documents` – Path to the folder you want to back up (relative to the project root).
 - `Mega:ScriptoriumBackup` – Remote name (`Mega`) and destination folder (`ScriptoriumBackup`).
@@ -113,8 +113,8 @@ If Scriptorium runs inside Docker, the `/app/data` volume is usually a **named v
 2. Run `rclone` on the host, pointing at the bind‑mounted path:
 
     ```bash
-rclone copy ./data/documents Mega:ScriptoriumBackup
-# If you prefer the remote to exactly mirror the local directory, you can use `rclone sync` instead of `rclone copy`. Be aware that `sync` will delete files on the remote that no longer exist locally.
+    rclone copy ./data/documents Mega:ScriptoriumBackup
+    # If you prefer the remote to exactly mirror the local directory, you can use `rclone sync` instead of `rclone copy`. Be aware that `sync` will delete files on the remote that no longer exist locally.
     ```
 
 Alternatively, you can run `rclone` inside a side‑car container that shares the same volume.
