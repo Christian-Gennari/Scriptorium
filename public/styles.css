@@ -460,6 +460,49 @@ input[type="checkbox"] {
   color: var(--text);
 }
 
+/* Toast notifications */
+#toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: toast-in 0.2s ease-out;
+  max-width: 320px;
+  pointer-events: auto;
+}
+
+.toast--error {
+  background: #d32f2f;
+  color: #fff;
+}
+
+.toast--success {
+  background: #388e3c;
+  color: #fff;
+}
+
+.toast--info {
+  background: #1976d2;
+  color: #fff;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Mobile responsive */
 @media (max-width: 640px) {
   #settings-panel {
@@ -519,7 +562,8 @@ input[type="checkbox"] {
   #settings-panel { display: none !important; }
   #settings-overlay { display: none !important; }
   #open-modal,
-  #shortcuts-modal { display: none !important; }
+  #shortcuts-modal,
+  #toast-container { display: none !important; }
   #editor-container {
     height: auto;
     overflow: visible;

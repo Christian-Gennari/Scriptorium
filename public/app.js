@@ -69,8 +69,17 @@ function newDocument() {
 }
 
 async function openFile(name) {
-  const file = await API.getFile(name);
-  if (!file) return;
+  let file;
+  try {
+    file = await API.getFile(name);
+  } catch {
+    showToast('Connection lost. Could not open file.', 'error');
+    return;
+  }
+  if (!file) {
+    showToast('File not found', 'error');
+    return;
+  }
   editor.value = file.content;
   currentFile = name;
   fileNameEl.textContent = name;
@@ -82,48 +91,60 @@ async function openFile(name) {
 }
 
 async function saveCurrentFile() {
-  if (!currentFile) {
-    const name = prompt('File name:', 'untitled.md');
-    if (!name) return false;
-    if (!name.toLowerCase().endsWith('.md')) currentFile = name + '.md';
-    else currentFile = name;
-    const ok = await API.createFile(currentFile, editor.value);
-    if (!ok) {
-      saveStatusEl.textContent = 'Error saving';
-      return false;
+  try {
+    if (!currentFile) {
+      const name = prompt('File name:', 'untitled.md');
+      if (!name) return false;
+      if (!name.toLowerCase().endsWith('.md')) currentFile = name + '.md';
+      else currentFile = name;
+      const ok = await API.createFile(currentFile, editor.value);
+      if (!ok) {
+        saveStatusEl.textContent = 'Error saving';
+        showToast('Failed to save file', 'error');
+        return false;
+      }
+      fileNameEl.textContent = currentFile;
+    } else {
+      const ok = await API.saveFile(currentFile, editor.value);
+      if (!ok) {
+        saveStatusEl.textContent = 'Error saving';
+        showToast('Failed to save file', 'error');
+        return false;
+      }
     }
-    fileNameEl.textContent = currentFile;
-  } else {
-    const ok = await API.saveFile(currentFile, editor.value);
-    if (!ok) {
-      saveStatusEl.textContent = 'Error saving';
-      return false;
-    }
+    isDirty = false;
+    saveStatusEl.textContent = 'Saved';
+    localStorage.setItem('calmly-current', JSON.stringify({ name: currentFile, content: editor.value }));
+    return true;
+  } catch {
+    saveStatusEl.textContent = 'Error saving';
+    showToast('Connection lost. Changes saved locally.', 'error');
+    return false;
   }
-  isDirty = false;
-  saveStatusEl.textContent = 'Saved';
-  localStorage.setItem('calmly-current', JSON.stringify({ name: currentFile, content: editor.value }));
-  return true;
 }
 
 async function saveAsFile() {
   const name = prompt('Save as:', currentFile || 'untitled.md');
   if (!name) return;
   const fname = name.toLowerCase().endsWith('.md') ? name : name + '.md';
-  const exists = await API.getFile(fname);
-  if (exists) {
-    if (!confirm(`"${fname}" already exists. Overwrite?`)) return;
-    const ok = await API.saveFile(fname, editor.value);
-    if (!ok) return;
-  } else {
-    const ok = await API.createFile(fname, editor.value);
-    if (!ok) return;
+  try {
+    const exists = await API.getFile(fname);
+    if (exists) {
+      if (!confirm(`"${fname}" already exists. Overwrite?`)) return;
+      const ok = await API.saveFile(fname, editor.value);
+      if (!ok) { showToast('Failed to save file', 'error'); return; }
+    } else {
+      const ok = await API.createFile(fname, editor.value);
+      if (!ok) { showToast('Failed to save file', 'error'); return; }
+    }
+    currentFile = fname;
+    fileNameEl.textContent = fname;
+    isDirty = false;
+    saveStatusEl.textContent = 'Saved';
+    updateStats();
+  } catch {
+    showToast('Connection lost. Could not save file.', 'error');
   }
-  currentFile = fname;
-  fileNameEl.textContent = fname;
-  isDirty = false;
-  saveStatusEl.textContent = 'Saved';
-  updateStats();
 }
 
 function triggerAutoSave() {
@@ -173,6 +194,19 @@ editor.addEventListener('keydown', (e) => {
     }
   }
 });
+
+function showToast(message, type = 'error', duration = 4000) {
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.textContent = message;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.3s';
+    setTimeout(() => el.remove(), 300);
+  }, duration);
+}
 
 function sanitizeName(name) {
   const sanitized = name.replace(/[^a-zA-Z0-9._-]/g, '');
@@ -350,14 +384,22 @@ function closeShortcuts() {
 
 function debouncedSaveSettings() {
   clearTimeout(settingsSaveTimeout);
-  settingsSaveTimeout = setTimeout(() => {
-    API.saveSettings(settings);
+  settingsSaveTimeout = setTimeout(async () => {
+    try {
+      await API.saveSettings(settings);
+    } catch {
+      showToast('Failed to save settings', 'error');
+    }
   }, 500);
 }
 
 async function updateSetting(key, value) {
   settings[key] = value;
-  await API.saveSettings(settings);
+  try {
+    await API.saveSettings(settings);
+  } catch {
+    showToast('Failed to save settings', 'error');
+  }
   applySettings(settings);
 }
 
@@ -463,6 +505,7 @@ async function init() {
     settings = await API.getSettings();
   } catch {
     settings = {};
+    showToast('Could not load settings. Using defaults.', 'info');
   }
   applySettings(settings);
 
