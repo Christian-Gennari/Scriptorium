@@ -48,10 +48,13 @@ export function applySettings(s) {
 export function openSettings() {
   const sidebar = document.getElementById('sidebar');
   const backdrop = document.getElementById('sidebar-backdrop');
+  const btn = document.getElementById('btn-menu-toggle');
   sidebar.classList.add('show-settings');
   if (!sidebar.classList.contains('open')) {
     sidebar.classList.add('open');
     backdrop.classList.add('open');
+    btn.textContent = '\u2715';
+    btn.classList.add('sidebar-open');
   }
 }
 
