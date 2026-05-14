@@ -1,4 +1,5 @@
 import { spawn } from 'child_process';
+import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { chromium } from 'playwright';
@@ -6,6 +7,7 @@ import { chromium } from 'playwright';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const SCREENSHOTS = resolve(ROOT, 'screenshots');
+const SETTINGS_PATH = resolve(ROOT, 'data', 'settings.json');
 
 const SAMPLE_CONTENT = `# The Art of Writing
 
@@ -32,8 +34,42 @@ Voice is not discovered through searching. It emerges through the accumulated we
 
 *This sample document is rendered using TipTap, a ProseMirror-based editor with rich text formatting.*`;
 
+const SCREENSHOT_SETTINGS = {
+  theme: 'study',
+  textWidth: 60,
+  font: "'EB Garamond', serif",
+  fontSize: 18,
+  lineSpacing: 1.6,
+  distractionFree: false,
+  spellCheck: true,
+  typewriterSounds: false,
+  typewriterVolume: 0.7,
+  showTableOfContents: false,
+};
+
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
+}
+
+function backupSettings() {
+  if (existsSync(SETTINGS_PATH)) {
+    const bak = SETTINGS_PATH + '.bak';
+    copyFileSync(SETTINGS_PATH, bak);
+  }
+}
+
+function applyScreenshotSettings() {
+  writeFileSync(SETTINGS_PATH, JSON.stringify(SCREENSHOT_SETTINGS, null, 2));
+}
+
+function restoreSettings() {
+  const bak = SETTINGS_PATH + '.bak';
+  if (existsSync(bak)) {
+    copyFileSync(bak, SETTINGS_PATH);
+    unlinkSync(bak);
+  } else {
+    unlinkSync(SETTINGS_PATH);
+  }
 }
 
 function startServer(port) {
@@ -71,6 +107,10 @@ async function main() {
   const PORT = 9876;
   const URL = `http://localhost:${PORT}`;
 
+  console.log('Backing up and applying screenshot-friendly settings...');
+  backupSettings();
+  applyScreenshotSettings();
+
   console.log('Starting server...');
   const server = await startServer(PORT);
   await sleep(1000);
@@ -105,14 +145,6 @@ async function main() {
   const setTheme = (p, theme) =>
     p.evaluate((t) => { document.body.className = `theme-${t}`; }, theme);
 
-  const setFont = (p, font) =>
-    p.evaluate((f) => {
-      document.documentElement.style.setProperty('--font-body', f);
-      document.querySelector('.ProseMirror').style.fontFamily = f;
-    }, font);
-
-  const BEAUTIFUL_FONT = "'EB Garamond', serif";
-
   // Prime localStorage with content on first visit
   await injectContent(page);
 
@@ -122,7 +154,6 @@ async function main() {
   await shoot(page, 'hero.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
-    setFont(p, BEAUTIFUL_FONT);
     await sleep(500);
   });
 
@@ -130,7 +161,6 @@ async function main() {
   await shoot(page, 'sidebar.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
-    setFont(p, BEAUTIFUL_FONT);
     await p.evaluate(() => {
       document.getElementById('sidebar').classList.add('open');
       document.getElementById('sidebar-backdrop').classList.add('open');
@@ -143,7 +173,6 @@ async function main() {
   await shoot(page, 'theme-paper.png', async (p) => {
     setTheme(p, 'paper');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
-    setFont(p, BEAUTIFUL_FONT);
     await sleep(400);
   });
 
@@ -151,7 +180,6 @@ async function main() {
   await shoot(page, 'theme-dark.png', async (p) => {
     setTheme(p, 'dark');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
-    setFont(p, BEAUTIFUL_FONT);
     await sleep(400);
   });
 
@@ -159,7 +187,6 @@ async function main() {
   await shoot(page, 'settings.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
-    setFont(p, BEAUTIFUL_FONT);
     await p.evaluate(() => {
       const s = document.getElementById('sidebar');
       s.classList.add('open');
@@ -172,6 +199,10 @@ async function main() {
 
   await browser.close();
   server.kill();
+
+  console.log('Restoring original settings...');
+  restoreSettings();
+
   console.log('Done!');
 }
 
