@@ -230,6 +230,11 @@ body {
   font-size: 0.9em;
 }
 
+#editor .ProseMirror ul,
+#editor .ProseMirror ol {
+  padding-left: 2em;
+}
+
 /* ===== Bubble Menu ===== */
 .bubble-menu {
   display: flex;
