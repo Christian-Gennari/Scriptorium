@@ -36,6 +36,11 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
     const cancelBtn = document.getElementById('dialog-cancel');
     const closeBtn = document.getElementById('dialog-close');
 
+    const hiddenModals = ['open-modal', 'saveas-modal', 'shortcuts-modal']
+      .map(id => document.getElementById(id))
+      .filter(el => el && !el.classList.contains('hidden'));
+    hiddenModals.forEach(el => el.classList.add('hidden'));
+
     titleEl.textContent = title || 'Confirm';
     messageEl.textContent = message;
     confirmBtn.textContent = confirmLabel || 'OK';
@@ -64,6 +69,7 @@ export function showDialog({ title, message, prompt: promptDefault, confirmLabel
     function cleanup() {
       modal.classList.remove('dialog-modal--prompt');
       modal.classList.add('hidden');
+      hiddenModals.forEach(el => el.classList.remove('hidden'));
       overlayPop();
       confirmBtn.removeEventListener('click', onConfirm);
       cancelBtn.removeEventListener('click', onCancel);

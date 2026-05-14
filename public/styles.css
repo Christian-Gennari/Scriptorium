@@ -925,6 +925,13 @@ select:focus {
   box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
+.saveas-confirm-message {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+  font-family: var(--font-ui);
+  padding: 6px 4px;
+}
 /* ===== Shortcuts Modal ===== */
 .shortcuts-trigger {
   width: 100%;

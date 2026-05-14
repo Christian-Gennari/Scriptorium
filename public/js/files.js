@@ -114,39 +114,102 @@ export async function saveCurrentFile() {
 export async function saveAsFile() {
   return new Promise((resolve) => {
     const modal = document.getElementById('saveas-modal');
+    const title = document.getElementById('saveas-title');
     const input = document.getElementById('saveas-input');
+    const inputState = document.getElementById('saveas-input-state');
+    const confirmState = document.getElementById('saveas-confirm-state');
+    const confirmMsg = document.getElementById('saveas-confirm-message');
     const confirmBtn = document.getElementById('saveas-confirm');
     const cancelBtn = document.getElementById('saveas-cancel');
     const closeBtn = document.querySelector('.btn-close-saveas');
 
+    let pendingName = null;
+
+    function showInput() {
+      title.textContent = 'Save As';
+      inputState.classList.remove('hidden');
+      confirmState.classList.add('hidden');
+      confirmBtn.textContent = 'Save';
+      pendingName = null;
+    }
+
+    function showConfirm(name) {
+      title.textContent = 'Overwrite?';
+      inputState.classList.add('hidden');
+      confirmState.classList.remove('hidden');
+      confirmMsg.textContent = `"${name}" already exists. Overwrite?`;
+      confirmBtn.textContent = 'Overwrite';
+      pendingName = name;
+    }
+
     input.value = state.currentFile || 'untitled.md';
+    showInput();
     overlayPush();
     modal.classList.remove('hidden');
     setTimeout(() => { input.focus(); input.select(); }, 50);
 
     async function onConfirm() {
+      if (pendingName) {
+        const md = getMarkdown();
+        const fname = pendingName;
+        confirmBtn.disabled = true;
+        try {
+          const ok = await API.saveFile(fname, md);
+          if (!ok) { showToast('Failed to save file', 'error'); confirmBtn.disabled = false; return; }
+          state.currentFile = fname;
+          fileNameEl.textContent = fname;
+          document.title = `${fname} \u2014 Scriptorium`;
+          state.isDirty = false;
+          setSaveStatus('Saved', 'saved');
+          localStorage.setItem('scriptorium-draft', JSON.stringify({ name: fname, content: md }));
+          updateStats();
+          cleanup();
+          resolve(true);
+        } catch {
+          showToast('Connection lost', 'error');
+          confirmBtn.disabled = false;
+        }
+        return;
+      }
+
       const name = input.value.trim();
       if (!name) { cleanup(); resolve(false); return; }
       const fname = name.toLowerCase().endsWith('.md') ? name : name + '.md';
+      try {
+        const exists = await API.getFile(fname);
+        if (exists) { showConfirm(fname); return; }
+      } catch {
+        showToast('Connection lost', 'error');
+        return;
+      }
       const md = getMarkdown();
       confirmBtn.disabled = true;
-      const result = await saveFileWithOverwrite(fname, md);
-      cleanup();
-      if (result === null) { resolve(false); return; }
-      if (!result) { showToast('Failed to save file', 'error'); resolve(false); return; }
-      state.currentFile = fname;
-      fileNameEl.textContent = fname;
-      document.title = `${fname} \u2014 Scriptorium`;
-      state.isDirty = false;
-      setSaveStatus('Saved', 'saved');
-      localStorage.setItem('scriptorium-draft', JSON.stringify({ name: fname, content: md }));
-      updateStats();
-      resolve(true);
+      try {
+        const ok = await API.createFile(fname, md);
+        if (!ok) { showToast('Failed to save file', 'error'); confirmBtn.disabled = false; return; }
+        state.currentFile = fname;
+        fileNameEl.textContent = fname;
+        document.title = `${fname} \u2014 Scriptorium`;
+        state.isDirty = false;
+        setSaveStatus('Saved', 'saved');
+        localStorage.setItem('scriptorium-draft', JSON.stringify({ name: fname, content: md }));
+        updateStats();
+        cleanup();
+        resolve(true);
+      } catch {
+        showToast('Connection lost', 'error');
+        confirmBtn.disabled = false;
+      }
     }
 
     function onCancel() {
-      cleanup();
-      resolve(false);
+      if (pendingName) {
+        showInput();
+        setTimeout(() => { input.focus(); input.select(); }, 50);
+      } else {
+        cleanup();
+        resolve(false);
+      }
     }
 
     function cleanup() {

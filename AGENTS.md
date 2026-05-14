@@ -30,6 +30,12 @@
 - `settings.json` merges `DEFAULT_SETTINGS` with saved overrides on read.
 - Express 5, not 4 — verify middleware signatures if upgrading.
 
+## GitHub Issues
+
+When creating a GitHub issue, always:
+1. Check existing labels with `gh label list --repo owner/repo`
+2. Add relevant labels (bug/enhancement/design, priority level, etc.)
+
 ## Verify server
 
 ```bash

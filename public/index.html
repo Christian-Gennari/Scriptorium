@@ -261,12 +261,17 @@
 <div id="saveas-modal" class="hidden">
   <div class="modal modal--saveas">
     <div class="modal-header">
-      <h2>Save As</h2>
+      <h2 id="saveas-title">Save As</h2>
       <button class="btn-close-saveas">&times;</button>
     </div>
     <div class="modal-body">
-      <label class="saveas-label">File name</label>
-      <input type="text" id="saveas-input" class="saveas-input" spellcheck="false">
+      <div id="saveas-input-state">
+        <label class="saveas-label">File name</label>
+        <input type="text" id="saveas-input" class="saveas-input" spellcheck="false">
+      </div>
+      <div id="saveas-confirm-state" class="hidden">
+        <p id="saveas-confirm-message" class="saveas-confirm-message"></p>
+      </div>
     </div>
     <div class="modal-footer">
       <button id="saveas-cancel" class="dialog-btn-secondary">Cancel</button>
