@@ -11,7 +11,13 @@
     "type": "git",
     "url": "git+https://github.com/Christian-Gennari/scriptorium.git"
   },
-  "keywords": ["writing", "markdown", "self-hosted", "distraction-free", "editor"],
+  "keywords": [
+    "writing",
+    "markdown",
+    "self-hosted",
+    "distraction-free",
+    "editor"
+  ],
   "author": "",
   "license": "MIT",
   "type": "commonjs",
@@ -30,6 +36,7 @@
     "turndown": "^7.2.4"
   },
   "devDependencies": {
-    "esbuild": "^0.28.0"
+    "esbuild": "^0.28.0",
+    "playwright": "^1.60.0"
   }
 }
