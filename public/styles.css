@@ -230,9 +230,36 @@ body {
   font-size: 0.9em;
 }
 
+#editor .ProseMirror h1 {
+  font-size: 2em;
+  margin: 1.5em 0 0.5em;
+  line-height: 1.15;
+}
+
+#editor .ProseMirror h2 {
+  font-size: 1.5em;
+  margin: 1.25em 0 0.4em;
+  line-height: 1.2;
+}
+
+#editor .ProseMirror h3 {
+  font-size: 1.25em;
+  margin: 1em 0 0.3em;
+  line-height: 1.3;
+}
+
+#editor .ProseMirror p {
+  margin: 0.75em 0;
+}
+
 #editor .ProseMirror ul,
 #editor .ProseMirror ol {
   padding-left: 2em;
+  margin: 0.75em 0;
+}
+
+#editor .ProseMirror li {
+  margin: 0.25em 0;
 }
 
 /* ===== Bubble Menu ===== */

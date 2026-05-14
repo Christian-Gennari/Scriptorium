@@ -151,14 +151,14 @@ async function main() {
   console.log('Taking screenshots...');
 
   // 1. Hero — Writer's Study, clean editor
-  await shoot(page, 'hero-v2.png', async (p) => {
+  await shoot(page, 'hero-v3.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
     await sleep(500);
   });
 
   // 2. Sidebar open
-  await shoot(page, 'sidebar-v2.png', async (p) => {
+  await shoot(page, 'sidebar-v3.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
     await p.evaluate(() => {
@@ -170,21 +170,21 @@ async function main() {
   });
 
   // 3. Paper theme
-  await shoot(page, 'theme-paper-v2.png', async (p) => {
+  await shoot(page, 'theme-paper-v3.png', async (p) => {
     setTheme(p, 'paper');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
     await sleep(400);
   });
 
   // 4. Dark theme
-  await shoot(page, 'theme-dark-v2.png', async (p) => {
+  await shoot(page, 'theme-dark-v3.png', async (p) => {
     setTheme(p, 'dark');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
     await sleep(400);
   });
 
   // 5. Settings panel
-  await shoot(page, 'settings-v2.png', async (p) => {
+  await shoot(page, 'settings-v3.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
     await p.evaluate(() => {

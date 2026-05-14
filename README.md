@@ -1,6 +1,6 @@
 # Scriptorium
 
-![Scriptorium editor with the Writer's Study theme](screenshots/hero-v2.png)
+![Scriptorium editor with the Writer's Study theme](screenshots/hero-v3.png)
 
 A self-hosted writing app. Saves as plain `.md` files. No database,
 no accounts, no telemetry.
@@ -28,10 +28,10 @@ Started off as a [CalmlyWriter.com](https://calmlywriter.com/) clone, but has ou
 
 <br>
 
-![Sidebar open](screenshots/sidebar-v2.png)
-![Paper theme](screenshots/theme-paper-v2.png)
-![Dark theme](screenshots/theme-dark-v2.png)
-![Settings panel](screenshots/settings-v2.png)
+![Sidebar open](screenshots/sidebar-v3.png)
+![Paper theme](screenshots/theme-paper-v3.png)
+![Dark theme](screenshots/theme-dark-v3.png)
+![Settings panel](screenshots/settings-v3.png)
 
 </details>
 
