@@ -39,6 +39,10 @@
   --accent-glow: rgba(201, 149, 62, 0.12);
   --border: #3a342c;
   --caret: #c9953e;
+  --color-error: #d46a6a;
+  --color-success: #7ab87a;
+  --color-warning: #c9a54e;
+  --color-info: #6a9bc4;
   --font-ui: 'DM Sans', -apple-system, sans-serif;
   --font-body: 'Crimson Pro', Georgia, serif;
   --font-size: 18px;
@@ -58,6 +62,10 @@
   --accent-glow: rgba(201, 149, 62, 0.12);
   --border: #3a342c;
   --caret: #c9953e;
+  --color-error: #d46a6a;
+  --color-success: #7ab87a;
+  --color-warning: #c9a54e;
+  --color-info: #6a9bc4;
 }
 
 .theme-mist {
@@ -71,6 +79,10 @@
   --accent-glow: rgba(122, 139, 168, 0.10);
   --border: #33363d;
   --caret: #c8ccd4;
+  --color-error: #c47a7a;
+  --color-success: #7aad7a;
+  --color-warning: #b8a060;
+  --color-info: #7a9ab8;
 }
 
 .theme-dark {
@@ -84,6 +96,10 @@
   --accent-glow: rgba(136, 170, 204, 0.10);
   --border: #333333;
   --caret: #dddddd;
+  --color-error: #d47a7a;
+  --color-success: #7ab87a;
+  --color-warning: #c9a54e;
+  --color-info: #7aaacc;
 }
 
 .theme-black {
@@ -97,6 +113,10 @@
   --accent-glow: rgba(136, 136, 136, 0.08);
   --border: #222222;
   --caret: #aaaaaa;
+  --color-error: #b06a6a;
+  --color-success: #6a9e6a;
+  --color-warning: #a89050;
+  --color-info: #6a8aaa;
 }
 
 .theme-sepia {
@@ -110,6 +130,10 @@
   --accent-glow: rgba(139, 115, 85, 0.10);
   --border: #d8c8a8;
   --caret: #5f4b32;
+  --color-error: #a05050;
+  --color-success: #5a8a5a;
+  --color-warning: #8a7a40;
+  --color-info: #4a6a8a;
 }
 
 .theme-paper {
@@ -123,6 +147,10 @@
   --accent-glow: rgba(30, 58, 95, 0.08);
   --border: #d4d6d8;
   --caret: #1e3a5f;
+  --color-error: #b05050;
+  --color-success: #4a7a4a;
+  --color-warning: #8a7a40;
+  --color-info: #3a5a7a;
 }
 
 html, body {
@@ -416,7 +444,7 @@ body {
 }
 
 #save-status.save-status--saved {
-  color: #5a9e5a;
+  color: var(--color-success);
 }
 
 #save-status.save-status--saving {
@@ -424,11 +452,11 @@ body {
 }
 
 #save-status.save-status--unsaved {
-  color: #c94f4f;
+  color: var(--color-error);
 }
 
 #save-status.save-status--error {
-  color: #c94f4f;
+  color: var(--color-error);
 }
 
 /* ===== Settings Inside Sidebar ===== */
@@ -1094,21 +1122,27 @@ select:focus {
 }
 
 .toast--error {
-  background: #3d1a1a;
-  color: #e88;
-  border-color: #5a2020;
+  background: color-mix(in srgb, var(--color-error) 15%, var(--bg-surface));
+  color: var(--color-error);
+  border-color: color-mix(in srgb, var(--color-error) 35%, var(--border));
 }
 
 .toast--success {
-  background: #1a3d1a;
-  color: #8e8;
-  border-color: #205a20;
+  background: color-mix(in srgb, var(--color-success) 15%, var(--bg-surface));
+  color: var(--color-success);
+  border-color: color-mix(in srgb, var(--color-success) 35%, var(--border));
 }
 
 .toast--info {
-  background: #1a2a3d;
-  color: #8ae;
-  border-color: #20305a;
+  background: color-mix(in srgb, var(--color-info) 15%, var(--bg-surface));
+  color: var(--color-info);
+  border-color: color-mix(in srgb, var(--color-info) 35%, var(--border));
+}
+
+.toast--warning {
+  background: color-mix(in srgb, var(--color-warning) 15%, var(--bg-surface));
+  color: var(--color-warning);
+  border-color: color-mix(in srgb, var(--color-warning) 35%, var(--border));
 }
 
 @keyframes toast-in {
