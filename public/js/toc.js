@@ -23,7 +23,7 @@ function escapeHtml(text) {
   return d.innerHTML;
 }
 
-function updateTocTrigger() {
+export function updateTocTrigger() {
   const trigger = document.getElementById('toc-trigger');
   if (!trigger) return;
   const headings = getHeadings();

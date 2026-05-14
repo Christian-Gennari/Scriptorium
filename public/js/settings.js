@@ -1,6 +1,7 @@
 import { state, editorEl } from './state.js';
 import { API } from './api.js';
 import { showToast, overlayPush, overlayPop } from './ui.js';
+import { updateTocTrigger } from './toc.js';
 
 const DEFAULT_SETTINGS = {
   theme: 'study',
@@ -153,4 +154,5 @@ document.getElementById('setting-typewriter-volume').addEventListener('input', (
 
 document.getElementById('setting-toc').addEventListener('change', (e) => {
   updateSetting('showTableOfContents', e.target.checked);
+  updateTocTrigger();
 });
