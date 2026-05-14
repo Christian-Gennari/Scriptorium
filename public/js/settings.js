@@ -27,7 +27,8 @@ export function applySettings(s) {
 
   document.body.className = `theme-${t.theme ?? DEFAULT_SETTINGS.theme}`;
   editorEl.style.maxWidth = (t.textWidth ?? DEFAULT_SETTINGS.textWidth) + 'ch';
-  editorEl.style.fontFamily = t.font ?? DEFAULT_SETTINGS.font;
+  const pm = editorEl.querySelector('.ProseMirror');
+  if (pm) pm.style.fontFamily = t.font ?? DEFAULT_SETTINGS.font;
   editorEl.style.fontSize = (t.fontSize ?? DEFAULT_SETTINGS.fontSize) + 'px';
   editorEl.style.lineHeight = t.lineSpacing ?? DEFAULT_SETTINGS.lineSpacing;
   setProseMirrorSpellcheck(t.spellCheck ?? DEFAULT_SETTINGS.spellCheck);

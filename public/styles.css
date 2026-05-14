@@ -158,7 +158,6 @@ body {
   width: 100%;
   max-width: var(--text-width);
   height: 100%;
-  font-family: var(--font-body);
   font-size: var(--font-size);
   line-height: var(--line-spacing);
   color: var(--text);

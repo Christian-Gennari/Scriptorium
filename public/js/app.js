@@ -88,6 +88,7 @@ async function init() {
   }
 
   initEditor(initialContent);
+  applySettings(state.settings);
   initToc();
   updateStats();
   preloadSamples();
