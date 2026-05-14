@@ -3,6 +3,8 @@
 A self-hosted writing app. Saves as plain `.md` files. No database,
 no accounts, no telemetry.
 
+Started off as a [CalmlyWriter.com](https://calmlywriter.com/) clone, but has outgrown that scope and become its own thing now.
+
 ### What it does
 
 - A clean editor with themes (Writer's Study, Mist, Dark, Black,
