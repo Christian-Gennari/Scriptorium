@@ -105,6 +105,14 @@ async function main() {
   const setTheme = (p, theme) =>
     p.evaluate((t) => { document.body.className = `theme-${t}`; }, theme);
 
+  const setFont = (p, font) =>
+    p.evaluate((f) => {
+      document.documentElement.style.setProperty('--font-body', f);
+      document.querySelector('.ProseMirror').style.fontFamily = f;
+    }, font);
+
+  const BEAUTIFUL_FONT = "'EB Garamond', serif";
+
   // Prime localStorage with content on first visit
   await injectContent(page);
 
@@ -113,8 +121,8 @@ async function main() {
   // 1. Hero — Writer's Study, clean editor
   await shoot(page, 'hero.png', async (p) => {
     setTheme(p, 'study');
-    // Wait for TipTap to render
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
+    setFont(p, BEAUTIFUL_FONT);
     await sleep(500);
   });
 
@@ -122,6 +130,7 @@ async function main() {
   await shoot(page, 'sidebar.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
+    setFont(p, BEAUTIFUL_FONT);
     await p.evaluate(() => {
       document.getElementById('sidebar').classList.add('open');
       document.getElementById('sidebar-backdrop').classList.add('open');
@@ -134,6 +143,7 @@ async function main() {
   await shoot(page, 'theme-paper.png', async (p) => {
     setTheme(p, 'paper');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
+    setFont(p, BEAUTIFUL_FONT);
     await sleep(400);
   });
 
@@ -141,6 +151,7 @@ async function main() {
   await shoot(page, 'theme-dark.png', async (p) => {
     setTheme(p, 'dark');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
+    setFont(p, BEAUTIFUL_FONT);
     await sleep(400);
   });
 
@@ -148,6 +159,7 @@ async function main() {
   await shoot(page, 'settings.png', async (p) => {
     setTheme(p, 'study');
     await p.waitForSelector('.ProseMirror', { timeout: 5000 });
+    setFont(p, BEAUTIFUL_FONT);
     await p.evaluate(() => {
       const s = document.getElementById('sidebar');
       s.classList.add('open');
