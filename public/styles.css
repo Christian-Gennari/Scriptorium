@@ -303,6 +303,62 @@ body {
   flex-shrink: 0;
 }
 
+/* ===== Mobile Bubble Menu (Bottom Bar) ===== */
+#bubble-menu-mobile {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 16px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+  font-family: var(--font-ui);
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#bubble-menu-mobile.shown {
+  transform: translateY(0);
+}
+
+#bubble-menu-mobile button {
+  background: none;
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  transition: background 0.12s, color 0.12s;
+  min-width: 44px;
+  text-align: center;
+}
+
+#bubble-menu-mobile button:active {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+#bubble-menu-mobile button.is-active {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+#bubble-menu-mobile .sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
 /* ===== Menu Toggle ===== */
 .menu-toggle {
   position: fixed;
@@ -716,6 +772,18 @@ select:focus {
 
 .hidden {
   display: none !important;
+}
+
+/* ===== Touch & Selection ===== */
+.sidebar-btn, .file-item, .toc-item, .menu-toggle,
+.toast, .modal-header, .shortcut-row, .shortcut-section-label {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sidebar-btn, .file-item-name, .toc-item, .menu-toggle,
+#bubble-menu-mobile button {
+  touch-action: manipulation;
 }
 
 /* ===== Global Overlay ===== */
@@ -1322,6 +1390,11 @@ select:focus {
   opacity: 0 !important;
   pointer-events: none !important;
   transition: opacity 0.8s ease !important;
+}
+
+.distraction-free #bubble-menu-mobile {
+  transform: translateY(100%) !important;
+  pointer-events: none !important;
 }
 
 /* ===== Mobile Responsive ===== */
