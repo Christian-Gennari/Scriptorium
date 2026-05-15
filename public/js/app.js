@@ -19,6 +19,7 @@ document.getElementById('btn-upload-file').addEventListener('click', uploadLocal
 document.getElementById('btn-menu-toggle').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-hitbox').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
+document.getElementById('btn-close-sidebar').addEventListener('click', closeSidebar);
 
 document.querySelectorAll('.btn-close-modal').forEach(el => {
   el.addEventListener('click', closeModal);
