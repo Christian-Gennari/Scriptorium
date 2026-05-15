@@ -19,6 +19,7 @@ document.getElementById('btn-upload-file').addEventListener('click', uploadLocal
 document.getElementById('btn-menu-toggle').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-hitbox').addEventListener('click', toggleSidebar);
 document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
+document.getElementById('btn-close-sidebar').addEventListener('click', closeSidebar);
 
 document.querySelectorAll('.btn-close-modal').forEach(el => {
   el.addEventListener('click', closeModal);
@@ -92,6 +93,45 @@ async function init() {
   initToc();
   updateStats();
   preloadSamples();
+
+  let touchStartX = null;
+  let touchStartY = null;
+  let sidebarTouchId = null;
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && sidebar.contains(e.target)) {
+      sidebarTouchId = e.touches[0].identifier;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (sidebarTouchId !== null) {
+      const touch = Array.from(e.changedTouches).find(t => t.identifier === sidebarTouchId);
+      sidebarTouchId = null;
+      if (touch) {
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (deltaX < -50 && Math.abs(deltaY) < Math.abs(deltaX) * 0.5) {
+          closeSidebar();
+          touchStartX = null;
+          return;
+        }
+      }
+    }
+    if (touchStartX === null || touchStartX > 30) { touchStartX = null; return; }
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    if (deltaX <= 50 || Math.abs(deltaY) > Math.abs(deltaX) * 0.5) { touchStartX = null; return; }
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar.classList.contains('open') &&
+        !document.body.classList.contains('distraction-free')) {
+      toggleSidebar();
+    }
+    touchStartX = null;
+  }, { passive: true });
 
   window.addEventListener('beforeunload', (e) => {
     if (state.isDirty) {

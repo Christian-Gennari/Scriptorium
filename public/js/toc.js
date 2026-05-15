@@ -89,6 +89,7 @@ export function initToc() {
   });
 
   document.getElementById('toc-trigger')?.addEventListener('click', toggleToc);
+  document.getElementById('btn-close-toc')?.addEventListener('click', closeToc);
 
   document.addEventListener('click', (e) => {
     if (!tocOpen) return;
