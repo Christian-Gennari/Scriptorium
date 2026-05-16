@@ -27,7 +27,7 @@ export function updateTocTrigger() {
   const trigger = document.getElementById('toc-trigger');
   if (!trigger) return;
   const headings = getHeadings();
-  trigger.classList.toggle('hidden', !state.settings.showTableOfContents || headings.length === 0);
+  trigger.classList.toggle('hidden', !state.settings.showTableOfContents);
 }
 
 export function updateToc() {
