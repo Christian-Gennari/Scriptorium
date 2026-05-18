@@ -1625,23 +1625,66 @@ select:focus {
 
 /* ===== Print Styles ===== */
 @media print {
-  .menu-toggle { display: none; }
-  #sidebar-hitbox { display: none; }
-  #sidebar-backdrop { display: none; }
-  #sidebar { display: none !important; }
-  #open-modal, #shortcuts-modal, #saveas-modal, #dialog-modal, #global-overlay, #toast-container, #floating-info, #toc-panel { display: none !important; }
+  @page {
+    margin: 2cm;
+  }
+
+  html, body {
+    height: auto;
+    overflow: visible;
+    background: white;
+    color: black;
+  }
+
+  #app {
+    height: auto;
+  }
+
+  .menu-toggle,
+  #sidebar-hitbox,
+  #sidebar-backdrop,
+  #sidebar,
+  #open-modal, #shortcuts-modal, #saveas-modal, #dialog-modal,
+  #global-overlay, #toast-container, #floating-info, #toc-panel,
+  .bubble-menu, #bubble-menu-mobile {
+    display: none !important;
+  }
+
   #editor-container {
     height: auto;
     overflow: visible;
   }
+
   #editor, #editor .ProseMirror {
     max-width: 100%;
     padding: 0;
     overflow: visible;
     height: auto;
-  }
-  body {
-    background: white;
     color: black;
+  }
+
+  #editor .ProseMirror blockquote {
+    color: #333;
+    border-left-color: #999;
+  }
+
+  #editor .ProseMirror h1,
+  #editor .ProseMirror h2,
+  #editor .ProseMirror h3,
+  #editor .ProseMirror h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  #editor .ProseMirror img,
+  #editor .ProseMirror pre,
+  #editor .ProseMirror blockquote {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  #editor .ProseMirror {
+    orphans: 3;
+    widows: 3;
   }
 }
